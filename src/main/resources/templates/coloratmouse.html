@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mouse Color</title>
+    <script>
+        function getColor() {
+            fetch('/colorAtMouse')
+                .then(response => response.text())
+                .then(color => {
+                    document.getElementById('color').innerHTML = color;
+                });
+        }
+    </script>
+</head>
+<body>
+    <button onclick="getColor()">Get color at mouse</button>
+    <div id="color"></div>
+</body>
+</html>
