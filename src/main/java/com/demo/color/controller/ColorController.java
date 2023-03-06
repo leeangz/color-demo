@@ -61,8 +61,4 @@ public class ColorController {
         return image;
     }
     
-    @GetMapping("/upload")
-	public void upload() {
-		log.info("======== upload page =========");
-	}
 }

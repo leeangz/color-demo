@@ -69,14 +69,39 @@ public class ImageController {
 
 		// File 경로 임의 지정
 		String uploadFolder = "C:\\test/test1/abc/";
-		
+
+		for (MultipartFile multipartFile : uploadFile) {
+			log.info("=======================");
+			log.info("파일 명 : " + multipartFile.getOriginalFilename());
+			log.info("파일 사이즈 : " + multipartFile.getSize());
+
+			File saveFile = new File(uploadFolder, multipartFile.getOriginalFilename());
+
+			try {
+				multipartFile.transferTo(saveFile);
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
+		}
+	}
+
+	@GetMapping("/uploadAjax")
+	public void uploadAjax(MultipartFile[] uploadFile) {
+		log.info("==== upload Ajax ====");
+		// File 경로 임의 지정
+		String uploadFolder = "C:\\test/test1/abc/";
+
 		for (MultipartFile multipartFile : uploadFile) {
 			log.info("=======================");
 			log.info("파일 명 : " + multipartFile.getOriginalFilename());
 			log.info("파일 사이즈 : " + multipartFile.getSize());
 			
-			File saveFile = new File(uploadFolder, multipartFile.getOriginalFilename());
+			String uploadFileName = multipartFile.getOriginalFilename();
+			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
+			log.info(uploadFileName);
 			
+			File saveFile = new File(uploadFolder, uploadFileName);
+
 			try {
 				multipartFile.transferTo(saveFile);
 			} catch (Exception e) {
