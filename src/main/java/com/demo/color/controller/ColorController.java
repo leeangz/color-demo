@@ -40,7 +40,7 @@ public class ColorController {
 	
 	@GetMapping("/color2")
     public String getImage(Model model) {
-        String imageUrl = "/img/IMG_0184.JPG"; // Replace with the actual URL of your image
+        String imageUrl = "/img/IMG_0184.JPG"; // 이미지 경로
         BufferedImage image = getImgPixel(imageUrl);
 
         if (image != null) {
@@ -60,4 +60,9 @@ public class ColorController {
         }
         return image;
     }
+    
+    @GetMapping("/upload")
+	public void upload() {
+		log.info("======== upload page =========");
+	}
 }
