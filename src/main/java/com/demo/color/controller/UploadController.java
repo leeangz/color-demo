@@ -52,7 +52,7 @@ public class UploadController {
 		for (MultipartFile i : uploadFiles) {
 			if (i.getContentType().startsWith("image") == false) {
 				log.warn("this file is not image type");
-				return new ResponseEntity<>(HttpStatus.FORBIDDEN); // for문 나가기;
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 			}
 
 			String originalName = i.getOriginalFilename();
@@ -75,9 +75,9 @@ public class UploadController {
 				e.printStackTrace();
 			}
 		}
-		log.info(resultDTOList); // JSON으로 보낼값
+		log.info(resultDTOList);
 		return new ResponseEntity<>(resultDTOList, HttpStatus.OK);
-	}// end void
+	}
 
 	@GetMapping("/display")
 	public ResponseEntity<byte[]> getFile(String fileName) {

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Makeup</title>
+</head>
+<body>
+	<h1>메이크업</h1>
+	<form method="post" enctype="multipart/form-data"
+		th:action="@{/makeup.api}">
+<!-- 		<p>
+			<label for="file">Select a file to upload:</label> <input type="file"
+				name="file" id="file" required="required" />
+		</p> -->
+		<p>
+			<label for="choice">적용할 메이크업 선택</label> <select
+				name="choice" id="choice">
+				<option value="lips">립</option>
+				<option value="blush">블러셔</option>
+				<option value="foundation">파운데이션</option>
+			</select>
+		</p>
+        <input type="hidden" name="filePath" value="C:\park.jpg">
+		<p>
+			<button type="submit">메이크업 진행</button>
+		</p>
+	</form>
+</body>
+</html>
