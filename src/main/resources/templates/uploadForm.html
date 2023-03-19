@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Upload File</title>
+</head>
+<body>
+	<h1>Upload File</h1>
+	<form method="post" enctype="multipart/form-data"
+		th:action="@{/upload.do}">
+<!-- 		<p>
+			<label for="file">Select a file to upload:</label> <input type="file"
+				name="file" id="file" required="required" />
+		</p> -->
+		<p>
+			<label for="choice">Select a feature to apply:</label> <select
+				name="choice" id="choice">
+				<option value="lips">Lips</option>
+				<option value="blush">Blush</option>
+				<option value="foundation">Foundation</option>
+			</select>
+		</p>
+        <input type="hidden" name="filePath" value="C:\park.jpg">
+		<p>
+			<button type="submit">Upload</button>
+		</p>
+	</form>
+	<div class="uploadResult"></div>
+	<script>
+    function showUploadedImages(arr){
+            console.log(arr);
+            var divArea = $(".uploadResult");
+            var str = "";
+            for(var i = 0; i < arr.length; i++){
+                divArea.append( "<img src='/display?fileName="+arr[i].thumbnailURL+"'>");
+            }//end for
+            ;
+    } //end show...
+    </script>
+</body>
+</html>

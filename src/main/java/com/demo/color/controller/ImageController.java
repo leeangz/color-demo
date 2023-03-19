@@ -1,123 +1,54 @@
 package com.demo.color.controller;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.demo.color.service.ImageService;
-
-import lombok.extern.log4j.Log4j2;
-
-@Log4j2
-@Controller
-@RequestMapping("/image")
+@RestController
 public class ImageController {
 
-	private ImageService imageService;
+	@RequestMapping(value = "/test.do", method = RequestMethod.GET)
+	public ModelAndView Test() {
+		ModelAndView mav = new ModelAndView();
 
-	@Autowired
-	public ImageController(ImageService imageService) {
-		this.imageService = imageService;
-	}
-
-	@GetMapping("/upload")
-	public void upload2() {
-		log.info("======== upload page =========");
-	}
-
-	@PostMapping("/upload")
-	@ResponseBody
-	public void FileUpload3(MultipartHttpServletRequest request) {
+		String url = "http://127.0.0.1:5000/tospring";
+		String sb = "";
 		try {
-			log.info("/upload");
-			// request의 file이름을 가져온다.
-			String fileName = "TESTING_" + request.getParameter("file");
-			log.info(fileName);
+			HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
 
-			MultipartFile file = request.getFile("file");
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
 
-			// File 경로 임의 지정
-			String uploadPath = "C:\\test/test1/abc/";
+			String line = null;
 
-			File fileUpload = new File(uploadPath, file.getOriginalFilename());
-
-			// 생성 될 경로가 없을 경우, 파일을 생성한다.
-			if (!fileUpload.exists()) {
-				log.info(uploadPath + " : 파일 경로 생성완료");
-				fileUpload.mkdirs();
+			while ((line = br.readLine()) != null) {
+				sb = sb + line + "\n";
 			}
-			file.transferTo(fileUpload);
+			System.out.println("========br======" + sb.toString());
+			if (sb.toString().contains("ok")) {
+				System.out.println("test");
 
-		} catch (Exception e) {
-
-		}
-	}
-
-	@PostMapping("/uploadFormAction")
-	public void uploadFormPost(MultipartFile[] uploadFile, Model model) {
-
-		// File 경로 임의 지정
-		String uploadFolder = "C:\\test/test1/abc/";
-
-		for (MultipartFile multipartFile : uploadFile) {
-			log.info("=======================");
-			log.info("파일 명 : " + multipartFile.getOriginalFilename());
-			log.info("파일 사이즈 : " + multipartFile.getSize());
-
-			File saveFile = new File(uploadFolder, multipartFile.getOriginalFilename());
-
-			try {
-				multipartFile.transferTo(saveFile);
-			} catch (Exception e) {
-				log.error(e.getMessage());
 			}
-		}
-	}
+			br.close();
 
-	@GetMapping("/uploadAjax")
-	public void uploadAjax(MultipartFile[] uploadFile) {
-		log.info("==== upload Ajax ====");
-		// File 경로 임의 지정
-		String uploadFolder = "C:\\test/test1/abc/";
-
-		for (MultipartFile multipartFile : uploadFile) {
-			log.info("=======================");
-			log.info("파일 명 : " + multipartFile.getOriginalFilename());
-			log.info("파일 사이즈 : " + multipartFile.getSize());
-			
-			String uploadFileName = multipartFile.getOriginalFilename();
-			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
-			log.info(uploadFileName);
-			
-			File saveFile = new File(uploadFolder, uploadFileName);
-
-			try {
-				multipartFile.transferTo(saveFile);
-			} catch (Exception e) {
-				log.error(e.getMessage());
-			}
-		}
-	}
-
-	@GetMapping("/pixel")
-	public ResponseEntity<String> getPixelValue(@RequestParam("x") int x, @RequestParam("y") int y) {
-		try {
-			String pixelValue = imageService.getPixelValue(x, y);
-			return ResponseEntity.ok(pixelValue);
-		} catch (IOException e) {
+			System.out.println("" + sb.toString());
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
-			return ResponseEntity.badRequest().body("Failed to get pixel value.");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		mav.addObject("test1", sb.toString()); // "test1"는 jsp파일에서 받을때 이름,
+		// sb.toString은 value값(여기에선 test)
+		mav.addObject("fail", false);
+		mav.setViewName("test"); // jsp파일 이름
+		return mav;
 	}
 }
