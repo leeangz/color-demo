@@ -1,29 +1,62 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Makeup</title>
-</head>
-<body>
-	<h1>메이크업</h1>
-	<form method="post" enctype="multipart/form-data"
-		th:action="@{/makeup.api}">
-<!-- 		<p>
-			<label for="file">Select a file to upload:</label> <input type="file"
-				name="file" id="file" required="required" />
-		</p> -->
-		<p>
-			<label for="choice">적용할 메이크업 선택</label> <select
-				name="choice" id="choice">
-				<option value="lips">립</option>
-				<option value="blush">블러셔</option>
-				<option value="foundation">파운데이션</option>
-			</select>
-		</p>
-        <input type="hidden" name="filePath" value="C:\park.jpg">
-		<p>
-			<button type="submit">메이크업 진행</button>
-		</p>
-	</form>
-</body>
-</html>
+<html xmlns:th="http://www.thymeleaf.org"><head>
+    <meta charset="UTF-8">
+    <title>Makeup</title>
+    </head>
+    <body>
+        <h1>메이크업</h1>
+        <form method="post" enctype="multipart/form-data" th:action="@{/makeup.api}">
+    <!-- 		<p>
+                <label for="file">Select a file to upload:</label> <input type="file"
+                    name="file" id="file" required="required" />
+            </p> -->
+            <p>
+                <label for="choice">적용할 메이크업 선택</label> <select name="choice" id="choice">
+                    <option value="lips">립</option>
+                    <option value="blush">블러셔</option>
+                    <option value="foundation">파운데이션</option>
+                </select>
+            </p>
+            <p>
+                <label for="color">적용할 색상 선택</label> <select name="color" id="color">
+                    <option value="red">red</option>
+                    <option value="orange">orange</option>
+                    <option value="purple">purple</option>
+                    <option value="pink">pink</option>
+                </select>
+            </p>
+            <p>
+                <label for="choice" value="lips">Lips</label>
+                <div class="colorwrapper" style="display: grid;grid-template-columns: repeat(4, 1fr);width: 180px;">
+                    <div for="color" value="red" class="red" style="margin: 0 auto;width: 20px;height: 20px;border-radius: 50%;background: rgb(255,0,0);"></div>
+                    <div for="color" value="orange" class="orange" style="margin: 0 auto;width: 20px;height: 20px;border-radius: 50%;background: rgb(255,127,0);"></div>
+                    <div for="color" value="purple" class="purple" style="margin: 0 auto;width: 20px;height: 20px;border-radius: 50%;background: #673AB7;"></div>
+                    <div for="color" value="pink" class="pink" style="margin: 0 auto;width: 20px;height: 20px;border-radius: 50%;background: rgb(250,5,234);"></div>
+                </div>
+            </p>
+            <p>
+                <label for="choice" value="blush">Blush</label>
+                <div class="colorwrapper" style="display: grid;grid-template-columns: repeat(4, 1fr);width: 180px;">
+                    <div for="color" value="red" class="red" style="margin: 0 auto;width: 20px;height: 20px;border-radius: 50%;background: rgb(255,0,0);"></div>
+                    <div for="color" value="orange" class="orange" style="margin: 0 auto;width: 20px;height: 20px;border-radius: 50%;background: rgb(255,127,0);"></div>
+                    <div for="color" value="purple" class="purple" style="margin: 0 auto;width: 20px;height: 20px;border-radius: 50%;background: #673AB7;"></div>
+                    <div for="color" value="pink" class="pink" style="margin: 0 auto;width: 20px;height: 20px;border-radius: 50%;background: rgb(250,5,234);"></div>
+                </div>
+            </p>
+            <p>
+                <label for="choice" value="foundation">Foundation</label>
+                <div class="colorwrapper" style="display: grid;grid-template-columns: repeat(4, 1fr);width: 180px;">
+                    <div for="color" value="red" class="red" style="margin: 0 auto;width: 20px;height: 20px;border-radius: 50%;background: rgba(175, 149, 115, 0.815);"></div>
+                    <div for="color" value="orange" class="orange" style="margin: 0 auto;width: 20px;height: 20px;border-radius: 50%;background: rgb(211, 199, 199);"></div>
+                    <div for="color" value="purple" class="purple" style="margin: 0 auto;width: 20px;height: 20px;border-radius: 50%;background: #fde3f3;"></div>
+                    <div for="color" value="pink" class="pink" style="margin: 0 auto;width: 20px;height: 20px;border-radius: 50%;background: rgb(230, 227, 216);"></div>
+                </div>
+            </p>
+            
+            
+            <input type="hidden" name="filePath" value="C:\park.jpg">
+            <p>
+                <button type="submit">메이크업 진행</button>
+            </p>
+        </form>
+    
+</body></html>

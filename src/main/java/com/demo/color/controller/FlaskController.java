@@ -51,9 +51,10 @@ public class FlaskController {
 
 	@PostMapping("/makeup.api")
 	public String MakeupApi(@RequestParam("filePath") String filePath,
-	        @RequestParam("choice") String choice, Model model) throws IOException {
+	        @RequestParam("choice") String choice,@RequestParam("color") String color,Model model) throws IOException {
 	    
-		log.info(choice);
+		log.info("선택한 메이크업 방식 : " + choice);
+		log.info("선택된 색상 : " + color);
 	    log.info(filePath);
 
 	    RestTemplate restTemplate = new RestTemplate();
@@ -63,6 +64,7 @@ public class FlaskController {
 	    MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
 	    map.add("filePath", filePath);
 	    map.add("choice", choice);
+	    map.add("color", color);
 
 	    HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
