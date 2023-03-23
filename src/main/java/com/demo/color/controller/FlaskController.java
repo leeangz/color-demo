@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
@@ -35,6 +37,12 @@ public class FlaskController {
 		log.info("====== 플라스크 연동 사진 업로드 ======");
 		return "makeupform2";
 	}
+	
+	@GetMapping("/makeuping")
+	public String makeuping() {
+		log.info("===== 메이크업 중 =====");
+		return "makeupform2";
+	}
 
 	@PostMapping("/makeup.api")
 	public String MakeupApi(@RequestParam("filePath") String filePath,
@@ -44,7 +52,7 @@ public class FlaskController {
 		log.info("선택한 입술 색상 : " + lips);
 		log.info("선택된 블러쉬 색상 : " + blush);
 		log.info("선택된 파운데이션 색상 : " + foundation);
-	    log.info(filePath);
+	    log.info("원본 파일 경로 : " + filePath);
 
 	    RestTemplate restTemplate = new RestTemplate();
 
@@ -62,10 +70,13 @@ public class FlaskController {
 	    
 	    ObjectMapper mapper = new ObjectMapper();
 	    Map<String, String> responseData = mapper.readValue(responseJson, new TypeReference<Map<String, String>>() {});
+	    
 	    model.addAttribute("lips", responseData.get("lips"));
 	    model.addAttribute("blush", responseData.get("blush"));
 	    model.addAttribute("foundation", responseData.get("foundation"));
-	    model.addAttribute("output_filename", responseData.get("output_filename"));
+	    model.addAttribute("output_filepath", responseData.get("output_filepath"));
+	    
+	    log.info(responseData);
 	    
 	    return "makeup-result";
 	}
