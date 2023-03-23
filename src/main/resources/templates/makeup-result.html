@@ -6,7 +6,9 @@
 </head>
 <body>
     <h1>Makeup Image</h1>
-    <img th:src="@{${file_path}}" />
-
+    <img th:src="@{${output_filename}}" />
+    <span style="display:inline">Lips : </span><span th:text="${lips}" style="display:inline"></span>
+    <span style="display:inline">Blush : </span><span th:text="${blush}" style="display:inline"></span>
+    <span style="display:inline">Foundation : </span><span th:text="${foundation}" style="display:inline"></span>
 </body>
 </html>

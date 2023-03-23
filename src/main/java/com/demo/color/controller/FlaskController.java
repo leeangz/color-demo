@@ -1,6 +1,7 @@
 package com.demo.color.controller;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -22,9 +26,6 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 @Log4j2
 public class FlaskController {
-	
-	//@Autowired
-	//private MakeupService makeupservice;
 
 	@Value("${com.demo.upload.path}")
 	private String uploadPath;
@@ -34,17 +35,6 @@ public class FlaskController {
 		log.info("====== 플라스크 연동 사진 업로드 ======");
 		return "makeupform2";
 	}
-	
-	/*
-	 * @Configuration
-	 * 
-	 * @EnableWebMvc public class WebConfig implements WebMvcConfigurer {
-	 * 
-	 * @Override public void addResourceHandlers(ResourceHandlerRegistry registry) {
-	 * registry .addResourceHandler("/img/**")
-	 * .addResourceLocations("file:C:/dev64/thehyundai/color/") .setCachePeriod(0);
-	 * } }
-	 */
 
 	@PostMapping("/makeup.api")
 	public String MakeupApi(@RequestParam("filePath") String filePath,
@@ -57,8 +47,6 @@ public class FlaskController {
 	    log.info(filePath);
 
 	    RestTemplate restTemplate = new RestTemplate();
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 	    MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
 	    map.add("filePath", filePath);
@@ -66,11 +54,19 @@ public class FlaskController {
 	    map.add("blush", blush);
 	    map.add("foundation", foundation);
 
-	    HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-
-	    String responseString = restTemplate.postForObject("http://127.0.0.1:5000/apply-makeup/", requestEntity, String.class);
-
-	    model.addAttribute("file_path", responseString);
+	    String apiUrl = "http://127.0.0.1:5000/apply-makeup/";
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+	    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+	    String responseJson = restTemplate.postForObject(apiUrl, request, String.class);
+	    
+	    ObjectMapper mapper = new ObjectMapper();
+	    Map<String, String> responseData = mapper.readValue(responseJson, new TypeReference<Map<String, String>>() {});
+	    model.addAttribute("lips", responseData.get("lips"));
+	    model.addAttribute("blush", responseData.get("blush"));
+	    model.addAttribute("foundation", responseData.get("foundation"));
+	    model.addAttribute("output_filename", responseData.get("output_filename"));
+	    
 	    return "makeup-result";
 	}
 
