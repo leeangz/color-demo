@@ -92,15 +92,11 @@ def try_makeup():
     
     # output 저장 -> 뒤에 시간에 따른 uuid 붙음
     output_filename = f"output_{int(time.time())}_{uuid.uuid4()}.jpg"
-    output_filepath_local= f"..\img\{output_filename}"
-    cv2.imwrite(output_filepath_local, blend)
-    print(output_filepath_local)
-    print(output_filename)
-    
     output_filepath= f"https://s3.ap-northeast-2.amazonaws.com/hbeauty.bucket/{output_filename}"
+    cv2.imwrite(output_filepath, blend)
     
     try:
-        s3.upload_file(output_filepath_local,"hbeauty.bucket",output_filename)
+        s3.upload_file(output_filename,"hbeauty.bucket",output_filename)
     except Exception as e:
      print(e)
     

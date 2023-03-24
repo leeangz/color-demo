@@ -1,0 +1,164 @@
+<html xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0">
+    <title>상담결과 시스템</title>
+
+    </head>
+    <body style="margin: 50px 100px;">
+        <div class="logo" style=" text-align: center;margin: 50;">
+            <img class="output" src="../static/img/logo.png" style="max-width: 30%;">
+        </div>
+        <div>
+<div class="makeupwrapper">
+            <div class="numbering" style="margin: 40px 50px;">
+                <p style="display:inline">예약번호 : </p>
+                <p style="display:inline">N093873509</p>
+            </div>
+            <div class="makeupwrapper" style="grid-template-columns: 30% 20% 50%;display: grid;margin: 0 50 0 50;">
+                <div class="wrapper1" style="margin-right: 20px;">
+    <p style="margin-top: 0;font-weight: bold;">고객 정보</p>
+                    <div>
+                    <p style="display:inline;margin-bottom: 10px;">상담자 : </p>
+                    <p style="display:inline;">세팅맨</p>
+                    </div>
+                    <div>
+                    <p style="display:inline"><br>메이크업 아티스트 : </p>
+                    <p style="display:inline">MARY</p>
+                    </div>
+                    <p style="display:inline"><br>상담 일자 : </p>
+                    <p style="display:inline">2023/03/23 11:00</p>
+                    <div>
+                    <!-- 기초 진단 정보 그래프로 나타나는 js 데려와서 해보는거 추후 논의-->
+                    <p style="display:inline"><br>기초 진단 정보 : </p>
+                    <p style="display:inline">NBTI</p>
+                    </div>
+                    <div>
+                    <!-- 상담 내용 checkbox나 라디오 버튼 만들어서 상담 내역 관리 가능하게도 가능 (추후 논의 후 수정) -->
+                    <p style="display:inline"><br>요청 사항 : </p>
+                    <p style="display:inline">촉촉한 피부 마감 선호, 립 브랜드 베네피트 선호</p>
+                    </div>
+                </div>
+                <div class="wrapper2" style="">
+                    <p style="margin-top: 0;font-weight: bold;">상담결과</p>
+                    <div>
+                    <p style="display:inline">Lip : </p>
+                    <p style="display:inline">Pink</p>
+                    </div>
+                    <div>
+                    <p style="display:inline"><br>Blush : </p>
+                    <p style="display:inline">Lightpurple</p>
+                    </div>
+                    <div>
+                    <p style="display:inline"><br>Foundation : </p>
+                    <p style="display:inline">coolpink</p>
+                    </div>
+                </div>
+                <div class="makeupwrapper" style="margin: 0 70;">    
+                    <div class="numbering" style="text-align: center;">
+                <p style="text-align:center;margin-top: 0;font-weight: bold;">결과 사진</p>
+            </div>
+                    <div class="wrapper3" style="grid-template-columns: repeat(2, 1fr);display: grid;place-items: center;">
+                            <div class="faceupload" style="float: left;">
+                                <img class="face" src="../static/img/park.jpg" style="max-width: 200px;margin: 0 20 20 20;float: right;">
+                            </div>
+                            <div class="faceupload" style="float: left;">
+                               <div style=""><img class="face" src="../static/img/output.jpg" style="max-width: 200px;margin: 0 20 20 20;">
+
+                               </div>  </div>
+                               <div style="text-align: center;"><span>BEFORE</span></div>
+                               <div style="text-align: center;"><span>AFTER</span></div>
+                    </div>
+                </div>
+    </div>
+</div>
+<div class="product-list-wrap" style="
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+">
+    <div class="product-list type1" id="product-list" style="position: absolute;width: 100%;display: grid; place-items: center;overflow-x: scroll; grid-auto-flow: column;">
+    <div>
+        <div class="prod-unit"><div class="img">
+                <a href="#" onclick="javascript:untdItemDetailView('50022','40A0135074', 'N','00','X');return false;">
+                    <img src="https://image.thehyundai.com/static/7/0/5/13/A0/40A0135074_0_480.jpg" alt="[디올] NEW 립 글로우" onerror="noImage(this, 'https://image.thehyundai.com/hdmall/images/pd/no_image_480x480.jpg')">
+                    <span class="bg"></span></a></div>
+            <div class="info">
+                <div class="price-info single">
+                    <span>48,000<i>원</i></span>
+                </div>
+                <a href="#" class="title ellipsis" onclick="javascript:untdItemDetailView('50022','40A0135074', 'N','00','');return false;">[디올] NEW 립 글로우</a>
+            </div>
+        </div></div>
+    <div><div class="prod-unit"><div class="img" data-slitmcd="40A1144911:50022" data-info="A002018:013368:판교점:1001:수입화장품"><a href="#" onclick="javascript:untdItemDetailView('50022','40A1144911', 'N','00','X');return false;"><img src="https://image.thehyundai.com/static/1/9/4/14/A1/40A1144911_0_480.jpg" alt="샤넬 레 베쥬 헬씨 글로우 립 밤" onerror="noImage(this, 'https://image.thehyundai.com/hdmall/images/pd/no_image_480x480.jpg')"><span class="bg"></span></a>
+        </div></div><div class="info"><div class="price-info single"><span>48,000<i>원</i></span></div><a href="#" class="title ellipsis" onclick="javascript:untdItemDetailView('50022','40A1144911', 'N','00','');return false;">샤넬 레 베쥬 헬씨 글로우 립 밤</a></div></div>
+    <div><div class="prod-unit"><div class="img" data-slitmcd="40A1039981:50022" data-info="119461:004506:중동점:1013:국내화장품,색조,향수 외"><a href="#" onclick="javascript:untdItemDetailView('50022','40A1039981', 'N','00','X');return false;"><img src="https://image.thehyundai.com/static/8/9/9/03/A1/40A1039981_0_480.jpg" alt="정샘물 스킨 세팅 톤 코렉팅 베이스(톤코렉팅 5ml+수정 화장패드1매)" onerror="noImage(this, 'https://image.thehyundai.com/hdmall/images/pd/no_image_480x480.jpg')"><span class="bg"></span></a></div><div class="info"><div class="price-info single"><span>32,000<i>원</i></span></div><a href="#" class="title ellipsis" onclick="javascript:untdItemDetailView('50022','40A1039981', 'N','00','');return false;">정샘물 스킨 세팅 톤 코렉팅 베이스(톤코렉팅 5ml+수정 화장패드1매)</a></div></div></div>
+    <div>
+        <div class="prod-unit"><div class="img">
+                <a href="#" onclick="javascript:untdItemDetailView('50022','40A0135074', 'N','00','X');return false;">
+                    <img src="https://image.thehyundai.com/static/7/0/5/13/A0/40A0135074_0_480.jpg" alt="[디올] NEW 립 글로우" onerror="noImage(this, 'https://image.thehyundai.com/hdmall/images/pd/no_image_480x480.jpg')">
+                    <span class="bg"></span></a></div>
+            <div class="info">
+                <div class="price-info single">
+                    <span>48,000<i>원</i></span>
+                </div>
+                <a href="#" class="title ellipsis" onclick="javascript:untdItemDetailView('50022','40A0135074', 'N','00','');return false;">[디올] NEW 립 글로우</a>
+            </div>
+        </div></div><div>
+            <div class="prod-unit"><div class="img">
+                    <a href="#" onclick="javascript:untdItemDetailView('50022','40A0135074', 'N','00','X');return false;">
+                        <img src="https://image.thehyundai.com/static/7/0/5/13/A0/40A0135074_0_480.jpg" alt="[디올] NEW 립 글로우" onerror="noImage(this, 'https://image.thehyundai.com/hdmall/images/pd/no_image_480x480.jpg')">
+                        <span class="bg"></span></a></div>
+                <div class="info">
+                    <div class="price-info single">
+                        <span>48,000<i>원</i></span>
+                    </div>
+                    <a href="#" class="title ellipsis" onclick="javascript:untdItemDetailView('50022','40A0135074', 'N','00','');return false;">[디올] NEW 립 글로우</a>
+                </div>
+            </div></div>    
+</div></div>
+</div>
+<style>
+    .prod-unit .img img {
+        display: block;
+        width: 256px;
+        height: 256px;
+    }
+    .prod-unit .img .bg {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        width: 100%;
+        height: 100%;
+        background: url(https://image.thehyundai.com/hdmall/images/co/bg_produnit_hover.png);
+    }
+    .prod-unit .info {
+        padding-top: 10px;
+    }
+
+    .product-list {
+        position: relative;
+        overflow: hidden;
+        background: url(https://image.thehyundai.com/hdmall/images/co/bg_productlist_border.png) no-repeat center bottom;
+    }
+
+    product-list-wrap {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    ul{
+        list-style:none;
+        }
+</style>
+
+
+
+
+
+
+
+</body></html>

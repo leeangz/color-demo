@@ -57,7 +57,7 @@
                     </div>
                 </div>
 
-            <input type="hidden" name="filePath" class="filePath" value="C:\park.jpg">
+            <input type="hidden" name="filePath" class="filePath" value="C:\shin.jpg">
             <p style="text-align: center;">
                 <button type="submit">확인</button>
             </p>
@@ -65,9 +65,9 @@
     </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
+  <!--   <script>
     $(document).ready(function() {
-  	  $('input[type="radio"]').on('click', function() {
+  	  $('input[type="radio"]').click(function() {
   		var filePath = $("#filePath").val();
   		var lips = $("#lips").val();
   		var blush = $("#blush").val();
@@ -78,12 +78,12 @@
   	      $.ajax({
   	    	    url: "/makeup.api",
   	    	    method: "POST",
-  	    	 	data : JSON.stringify({
+  	    	 	data : {
   	    	 	filePath : filePath,
   	  	      	lips : lips,
   	  	      	blush : blush,
   	  	      	foundation : foundation
-  	  	    	}),
+  	  	    	},
   	    	    contentType: "application/json",
   	    	    success: function(responseJson) {
   	    	        var responseData = JSON.parse(responseJson);
@@ -96,7 +96,7 @@
 			};
 		});
 	});
-    </script>
+    </script> -->
     <style>
         .lips input[type=radio]{
             display: none;
