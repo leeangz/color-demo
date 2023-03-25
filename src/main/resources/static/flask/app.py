@@ -92,7 +92,7 @@ def try_makeup():
     
     # output 저장 -> 뒤에 시간에 따른 uuid 붙음
     output_filename = f"output_{int(time.time())}_{uuid.uuid4()}.jpg"
-    output_filepath_local= f"..\img\{output_filename}"
+    output_filepath_local= f"../img/{output_filename}"
     cv2.imwrite(output_filepath_local, blend)
     print(output_filepath_local)
     print(output_filename)

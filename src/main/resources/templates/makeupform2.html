@@ -9,7 +9,7 @@
         <div class="makeupwrapper" style="grid-template-columns: repeat(2, 1fr);place-items: center;display: grid;margin: 0 50 0 50;">
             <div class="wrapper1">
                 <div class="faceupload" style="width: 600px;height: 800px;background: darkgray;float: left;">
-                    <img class="face" src="./img/park.jpg" style="width: 100%;">
+                    <img class="face" id="output-filepath" name="output_filepath" src="" style="width: 100%;">
                 </div>
             </div>
             <div class="wrapper2">
@@ -65,38 +65,44 @@
     </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <!--   <script>
+    <script>
     $(document).ready(function() {
   	  $('input[type="radio"]').click(function() {
-  		var filePath = $("#filePath").val();
-  		var lips = $("#lips").val();
-  		var blush = $("#blush").val();
-  		var foundation = $("#foundation").val();
+  		var filePath = $(".filePath").val();
+  		var lips = $("input[name=lips]:checked").val();
+  		var blush = $("input[name=blush]:checked").val();
+  		var foundation = $("input[name=foundation]:checked").val();
+  		
+  		console.log("filePath: " + filePath);
+  		console.log("lips: " + lips);
+  		console.log("blush: " + blush);
+  		console.log("foundation: " + foundation);
   		  
   	    if ($(this).is(':checked')) {
 
   	      $.ajax({
   	    	    url: "/makeup.api",
-  	    	    method: "POST",
+  	    	    type: "POST",
   	    	 	data : {
   	    	 	filePath : filePath,
   	  	      	lips : lips,
   	  	      	blush : blush,
   	  	      	foundation : foundation
   	  	    	},
-  	    	    contentType: "application/json",
-  	    	    success: function(responseJson) {
-  	    	        var responseData = JSON.parse(responseJson);
-  	    	        $("#output").attr("class", responseData.output_filepath);
-  	    	    },
-  	    	    error: function(xhr, status, error) {
-  	    	        console.error(error);
+  	  	    success: function(response) {
+  	  	    console.log(response);
+  	  	    var responseData = JSON.parse(response);
+  	  	    var outputFilePath = responseData.output_filepath;
+  	  		$('#output-filepath').attr('src', outputFilePath);
+  	  	  },
+  	    	    error: function(error) {
+  	    	        console.log(error);
   	    	    }
   	    	});
 			};
 		});
 	});
-    </script> -->
+    </script>
     <style>
         .lips input[type=radio]{
             display: none;
