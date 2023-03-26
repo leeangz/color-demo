@@ -40,10 +40,42 @@ public class FlaskController {
 		return "makeupform2";
 	}
 
-	@GetMapping("/makeuping")
-	public String makeuping() {
-		log.info("===== 메이크업 중 =====");
-		return "makeupform2";
+	@PostMapping("/makeupresult")
+	public String MakeupResult(@RequestParam("filePath") String filePath, @RequestParam("lips") String lips,
+			@RequestParam("blush") String blush, @RequestParam("foundation") String foundation, Model model)
+			throws IOException {
+
+		log.info("선택한 입술 색상 : " + lips);
+		log.info("선택된 블러쉬 색상 : " + blush);
+		log.info("선택된 파운데이션 색상 : " + foundation);
+		log.info("원본 파일 경로 : " + filePath);
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		map.add("filePath", filePath);
+		map.add("lips", lips);
+		map.add("blush", blush);
+		map.add("foundation", foundation);
+
+		String apiUrl = "http://127.0.0.1:5000/apply-makeup/";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+		String responseJson = restTemplate.postForObject(apiUrl, request, String.class);
+
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> responseData = mapper.readValue(responseJson, new TypeReference<Map<String, String>>() {
+		});
+
+		model.addAttribute("lips", responseData.get("lips"));
+		model.addAttribute("blush", responseData.get("blush"));
+		model.addAttribute("foundation", responseData.get("foundation"));
+		model.addAttribute("output_filepath", responseData.get("output_filepath"));
+
+		log.info(responseData);
+
+		return "makeup-result";
 	}
 
 	@PostMapping("/makeup.api")
