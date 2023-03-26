@@ -86,7 +86,7 @@ public class FlaskController {
 			String json = mapper.writeValueAsString(responseData);
 			return ResponseEntity.ok(json);
 		} catch (JsonProcessingException e) {
-			log.error("Failed to convert responseData to JSON", e);
+			log.error("변환이 안된다 변환이 안된다!!", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
