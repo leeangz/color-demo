@@ -44,7 +44,7 @@ ul {
 .product-list-wrap {
   position: relative;
   width: 100%;
-  height: 430px;
+  height: 480px;
   overflow: auto;
 }
 .btn_green {
@@ -100,4 +100,19 @@ p.pickbtn {
   place-items: center;
   width: 70%;
   margin: 0 auto;
+}
+
+.clonepart .img img {
+  display: block;
+  width: 256px;
+  height: 256px;
+}
+
+.empty {
+  width: 250;
+  height: 330;
+  border-radius: 10%;
+  border-style: dashed;
+  border-color: darkgray;
+  margin: 0 10px;
 }
