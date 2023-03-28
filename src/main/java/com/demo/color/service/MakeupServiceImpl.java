@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.demo.color.domain.BlushVO;
 import com.demo.color.domain.FoundationVO;
 import com.demo.color.domain.LipVO;
+import com.demo.color.domain.ResultVO;
 import com.demo.color.mapper.MakeupMapper;
 
 @Service
@@ -29,6 +30,11 @@ public class MakeupServiceImpl implements MakeupService{
 	@Override
 	public List<FoundationVO> pickFoundation(String optcolor) {
 		return mapper.PickFoundation(optcolor);
+	}
+
+	@Override
+	public void insertResult(ResultVO result) {
+		mapper.insertResult(result);
 	}
 
 }
