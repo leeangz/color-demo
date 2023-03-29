@@ -24,5 +24,7 @@ public interface ReservMapper {
 	public ReservVO reserv(@Param("rimg") String rimg, @Param("rdate") String rdate, @Param("mid") String mid);
 
 	public int CountDate(String rdate);
+	
+	public int CountTime(String rdate);
 
 }

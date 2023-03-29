@@ -22,4 +22,9 @@ public class ReservServiceImpl implements ReservService {
 		return mapper.CountDate(rdate);
 	}
 
+	@Override
+	public int CountTime(String rdate) {
+		return mapper.CountTime(rdate);
+	}
+
 }

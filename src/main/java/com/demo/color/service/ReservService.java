@@ -23,5 +23,8 @@ public interface ReservService {
 
 	//날짜 별 예약 시간 남아있는지 조회 위함
 	public int CountDate(String rdate);
+	
+	//시간 별 매진 확인
+	public int CountTime(String rdate);
 
 }

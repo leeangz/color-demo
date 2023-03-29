@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calendar Example</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<table>
+		<tr>
+			<td align="center"><button onclick="prevCalendar()">Prev</button></td>
+			<td colspan="5" align="center" id="calendarTitle"></td>
+			<td align="center"><button onclick="nextCalendar()">Next</button></td>
+		</tr>
+		<tr>
+			<th style="color: red;">Sun</th>
+			<th>Mon</th>
+			<th>Tue</th>
+			<th>Wed</th>
+			<th>Thu</th>
+			<th>Fri</th>
+			<th style="color: blue;">Sat</th>
+		</tr>
+		<tbody id="calendarBody"></tbody>
+	</table>
+
+<script>
+    let today = new Date();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+
+    function buildCalendar() {
+        let firstDay = new Date(currentYear, currentMonth, 1);
+        let lastDay = new Date(currentYear, currentMonth + 1, 0);
+        let calendarTitle = document.getElementById("calendarTitle");
+        let calendarBody = document.getElementById("calendarBody");
+        let twoWeeksFromToday = new Date();
+        twoWeeksFromToday.setDate(twoWeeksFromToday.getDate() + 14);
+
+        calendarTitle.innerHTML = currentYear + "년 " + (currentMonth + 1) + "월";
+
+        while (calendarBody.firstChild) {
+            calendarBody.removeChild(calendarBody.firstChild);
+        }
+
+        let date = 1;
+        for (let i = 0; i < 6; i++) {
+            let row = document.createElement("tr");
+            for (let j = 0; j < 7; j++) {
+                if (i === 0 && j < firstDay.getDay()) {
+                    let cell = document.createElement("td");
+                    let cellText = document.createTextNode("");
+                    cell.appendChild(cellText);
+                    row.appendChild(cell);
+                } else if (date > lastDay.getDate()) {
+                    break;
+                } else {
+                    let cell = document.createElement("td");
+                    let cellText = document.createTextNode(date);
+                    if (date === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+                        cell.classList.add("current-day");
+                    }
+                    if (date > today.getDate() && date <= twoWeeksFromToday && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+                        cell.classList.add("two-weeks");
+                    }
+                    cell.appendChild(cellText);
+                    row.appendChild(cell);
+                    date++;
+                }
+            }
+            calendarBody.appendChild(row);
+        }
+    }
+
+    function prevCalendar() {
+        currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
+        currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+        buildCalendar();
+    }
+
+    function nextCalendar() {
+        currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
+        currentMonth = (currentMonth + 1) % 12;
+        let twoWeeksFromToday = new Date();
+        twoWeeksFromToday.setDate(twoWeeksFromToday.getDate() + 14);
+        buildCalendar();
+    }
+
+    buildCalendar();
+</script>
+<style>
+table {
+	border-collapse: collapse;
+	width: 80%;
+	margin: auto;
+}
+
+td, th {
+	border: 1px solid black;
+	padding: 10px;
+	text-align: center;
+}
+
+th {
+	background-color: lightgray;
+}
+
+td:hover {
+	background-color: lightblue;
+}
+
+.current-day {
+	background-color: beige;
+}
+
+.two-weeks {
+  background-color: orange;
+}
+</style>
+
+</body>
+</html>

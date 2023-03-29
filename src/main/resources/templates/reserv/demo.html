@@ -1,0 +1,2003 @@
+<html lang="ko">
+  <head>
+    <link rel="shortcut icon" href="/leeum_fav.ico" type="image/x-icon" />
+    <meta property="og:title" content="리움미술관 온라인 예약·예매" />
+    <meta
+      property="og:image"
+      content="http://ticket.leeum.org/resources/img/leeum_tag.jpg"
+    />
+    <meta property="og:url" content="http://www.leeum.org" />
+    <meta property="og:type" content="webstie" />
+    <meta property="og:description" content="리움미술관 온라인 예약·예매" />
+    <meta name="description" content="리움미술관 Leeum Museum of Art" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"
+    />
+
+    <link
+      rel="stylesheet"
+      href="http://ticket.leeum.org/resources/css/bootstrap_custom.css?v=20230329154700"
+    />
+    <link
+      rel="stylesheet"
+      href="http://ticket.leeum.org/resources/css/leeum_base.css?v=20230329154700"
+    />
+    <link
+      rel="stylesheet"
+      href="http://ticket.leeum.org/resources/css/leeum.css?v=20230329154700"
+    />
+    <link
+      rel="stylesheet"
+      href="http://ticket.leeum.org/resources/css/swiper.css?v=20230329154700"
+    />
+    <link
+      rel="stylesheet"
+      href="http://ticket.leeum.org/resources/css/leeum_fix.css?v=20230329154700"
+    />
+
+    <link
+      href="https://cdn2.devy.kr/2030/css/webgate.css?v=1"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn2.devy.kr/2030/css/webgate-frontend.css?v=1"
+      rel="stylesheet"
+    />
+    <script
+      type="text/javascript"
+      async=""
+      src="https://www.google-analytics.com/analytics.js"
+    ></script>
+    <script src="https://cdn2.devy.kr/2030/js/webgate.js?v=1"></script>
+    <script src="http://ticket.leeum.org/resources/js/vue.min.js"></script>
+    <script src="http://ticket.leeum.org/resources/js/jquery-3.3.1.min.js"></script>
+    <script src="http://ticket.leeum.org/resources/js/lodash.min.js"></script>
+    <script src="http://ticket.leeum.org/resources/js/common.js?v=20230329154700"></script>
+    <script src="http://ticket.leeum.org/resources/js/tools.common.js?v=20230329154700"></script>
+    <script src="http://ticket.leeum.org/resources/js/leeum.js?v=20230329154700"></script>
+    <script src="http://ticket.leeum.org/resources/js/swiper.js?v=20230329154700"></script>
+    <script src="http://ticket.leeum.org/resources/js/bootstrap_custom.min.js?v=20230329154700"></script>
+    <!--begin of megafence-->
+    <title>
+      리움미술관 온라인 예약·예매 - 개인예매 - 전시선택 날짜/시간/인원수
+    </title>
+
+    <script>
+      var locale = "ko";
+
+      var minStartDT;
+      var maxEndDT;
+
+      $(function () {
+        $(window).off("resize");
+
+        // 헤더 메뉴 활성화 (개인예매)
+        $("#li_10").addClass("on");
+
+        getExhibitInfoList();
+
+        var sYearMonth = dateUtil.getToday("").substring(0, 6);
+        var twoWeekDay = getCurrentMonth();
+        if (sYearMonth < twoWeekDay) {
+          sYearMonth = twoWeekDay;
+        }
+        $("#calendar_date").val(sYearMonth);
+        getCalendarView(sYearMonth);
+
+        $("#step0 .tit").on("click", function () {
+          titleClickOpenEvent($(this));
+        });
+
+        $(".clickPeople").delegate(
+          'input[type="radio"] + label',
+          "click",
+          function (e) {
+            return clickPeopleCheck($(this));
+          }
+        );
+
+        $(".clickPeople").delegate(
+          'input[type="radio"]',
+          "change",
+          updateTotalPriceView
+        );
+
+        $(".clickDay, .clickTime").delegate("a", "click", function (e) {
+          var $this = $(this);
+          var i;
+          if ($this.parents(".clickDay").length > 0) i = 0;
+          if ($this.parents(".clickTime").length > 0) i = 1;
+
+          var $thisDis;
+          switch (i) {
+            /* 날짜 선택 */
+            case 0:
+              e.preventDefault();
+              $thisDis = $this.parent("td").hasClass("select_day");
+              if ($thisDis) {
+                WG_StartWebGate(
+                  1740, // GATE-ID
+                  function () {
+                    updateClickDayView($this);
+                  },
+                  "FRONTEND", // fixed
+                  "서비스 접속대기 중(Please wait.)", // 대기UI 제목
+                  false, // fixed
+                  function () {
+                    // 유량제어 서비스 장애 시 처리
+                    updateClickDayView($this);
+                  }
+                );
+              }
+              return false;
+              break;
+            /* 시간 선택 */
+            case 1:
+              e.preventDefault();
+              $thisDis =
+                $this.parent("li").hasClass("sold_out") ||
+                $this.parent("li").hasClass("unselect");
+              if (!$thisDis) {
+                updateClickTimeView($this);
+              } else {
+                return false;
+              }
+              break;
+          }
+        });
+      });
+
+      function nextOpen(i) {
+        var mobileH = 0;
+        var mochk = false;
+        if ($("#wrap").hasClass("mobileJS")) {
+          mobileH = $(".float_cont.mo").outerHeight();
+          mochk = true;
+        }
+        $("#step" + (i + 1))
+          .addClass("open")
+          .find(".accordion_cont")
+          .slideDown(400);
+
+        if (i == 2) {
+          $(".lowerBtn").addClass("open");
+          if (mochk) {
+            $(".footer").css({
+              "padding-bottom":
+                $(".lowerBtn").find(".total_wrap").outerHeight() +
+                $(".lowerBtn").find(".lower_btn").outerHeight(),
+            });
+          }
+        } else {
+          var scrlAfter = $("#step" + (i + 1)).offset().top;
+          $("html, body")
+            .stop()
+            .animate({ scrollTop: +(scrlAfter - mobileH) }, 400, function () {
+              // window.location.assign('#step'.concat(i + 1, '-head'));
+              document.querySelector("#step".concat(i + 1, "-head")).focus();
+            });
+        }
+        return false;
+      }
+
+      function titleClickOpenEvent($this) {
+        var hasClass = $this.parent("li").hasClass("open");
+
+        if (hasClass) {
+          $this
+            .parent("li")
+            .removeClass("open")
+            .find(".accordion_cont")
+            .slideUp(400);
+        } else {
+          $this
+            .parent("li")
+            .addClass("open")
+            .find(".accordion_cont")
+            .slideDown(400);
+        }
+      }
+
+      // 선택된 전시 데이터
+      function getExhibitInfoList() {
+        $.ajax({
+          url: "http://ticket.leeum.org/leeum/personal/getExhibitInfoListJson.do",
+          type: "POST",
+          contentType: "application/x-www-form-urlencoded; charset=utf-8",
+          data: {
+            foundCd: "M30",
+            locCd: "3",
+            muzCd: "000110",
+            eventCd: "202104",
+            selectGbn: "202104",
+          },
+          dataType: "json",
+          async: false,
+          cache: false,
+          success: function (data) {
+            var exhibitInfoList = data.exhibitInfoList;
+            var exhibitInfoDate = data.exhibitInfoDate;
+
+            var exhibitName = stringUtil.replaceAll(
+              stringUtil.replaceAll(
+                exhibitInfoList[0].EXHIBIT_NAME,
+                "&lt;",
+                "<"
+              ),
+              "&gt;",
+              ">"
+            );
+            var today_year = dateUtil.getToday("").substring(0, 4);
+            if (today_year == "2022") {
+              if (exhibitInfoList.length == 2) {
+                $("#floatMO_exhibit").text(exhibitName);
+                $("#floatMO_more").hide();
+              } else {
+                $("#floatMO_exhibit").text(
+                  exhibitName + " 외 " + (exhibitInfoList.length - 2)
+                );
+              }
+            } else {
+              if (exhibitInfoList.length == 1) {
+                $("#floatMO_exhibit").text(exhibitName);
+                $("#floatMO_more").hide();
+              } else {
+                $("#floatMO_exhibit").text(
+                  exhibitName + " 외 " + (exhibitInfoList.length - 1)
+                );
+              }
+            }
+
+            var eventNm = "";
+            var layerHtml = "";
+            var swiperHtml = "";
+            var nowDt = dateUtil.getToday("").substring(0, 8);
+
+            /*minStartDT = exhibitInfoList[0].EXHIBIT_START_DT;
+                    maxEndDT = exhibitInfoList[0].EXHIBIT_END_DT;*/
+
+            minStartDT = exhibitInfoDate.FROM_DT + "";
+            maxEndDT = exhibitInfoDate.TO_DT + "";
+
+            var onlyOngoing = true;
+            $.each(exhibitInfoList, function (i, item) {
+              //예정 상설전이 있을때는 예정 상설전이 표현되지 않도록 하기 위해 if문 추가함
+              if (
+                item.PLACE_GRP_10 == 2 ||
+                (item.PLACE_GRP_10 == 1 && item.PLACE_GRP_20 == 1)
+              ) {
+                var itemExhibitName = stringUtil.replaceAll(
+                  stringUtil.replaceAll(item.EXHIBIT_NAME, "&lt;", "<"),
+                  "&gt;",
+                  ">"
+                );
+
+                swiperHtml +=
+                  '<div class="swiper-slide"><img src="/getImage.do?fileGroupId=' +
+                  item.FILE_GROUP_ID +
+                  '" alt=""></div>';
+                layerHtml += "<li>" + itemExhibitName + "</li>";
+
+                eventNm += (eventNm != "" ? "|" : "") + itemExhibitName;
+
+                if (item.PLACE_GRP_10 == 1 && item.PLACE_GRP_20 == 1)
+                  onlyOngoing = false;
+              }
+
+              if (
+                item.PLACE_GRP_10 == 1 &&
+                item.PLACE_GRP_20 == 2 &&
+                onlyOngoing
+              ) {
+                var itemExhibitName = stringUtil.replaceAll(
+                  stringUtil.replaceAll(item.EXHIBIT_NAME, "&lt;", "<"),
+                  "&gt;",
+                  ">"
+                );
+                swiperHtml +=
+                  '<div class="swiper-slide"><img src="/getImage.do?fileGroupId=' +
+                  item.FILE_GROUP_ID +
+                  '" alt=""></div>';
+                layerHtml += "<li>" + itemExhibitName + "</li>";
+                eventNm += (eventNm != "" ? "|" : "") + itemExhibitName;
+              }
+            });
+
+            // 현재날짜보다 이전 데이터는 보여주지 않음
+            if (nowDt > minStartDT) {
+              minStartDT = nowDt;
+            }
+
+            $("#eventNm").val(eventNm);
+
+            $("#floatPC_swiper, #floatMO_swiper").html(swiperHtml);
+            $("#floatPC_layer, #floatMO_layer").html(layerHtml);
+            $("#floatPC_possible, #floatMO_possible").html(
+              "장소 - " + exhibitInfoList[0].PLACE
+            );
+            /*$("#floatPC_possible, #floatMO_possible").html("장소 - " + getPlaceNM(exhibitInfoList[0].PLACE));*/
+            $("#shopCd").val(exhibitInfoList[0].SHOP_CD);
+
+            swiperComm();
+
+            setCalendarSelectView(exhibitInfoList);
+          },
+        });
+      }
+
+      function getPlaceNM(placecode) {
+        /*var placeList = placecode.split(',');
+            var returnStr = "";
+    
+            for(var i in placeList){
+                var curPlace = placeList[i].replace(' ','');
+    
+                if(curPlace=='M3'){
+                    returnStr += "아동교육문화센터";
+                }else{
+                    returnStr += curPlace.replace(' ','');
+                }
+                if(i!=placeList.length-1){
+                    returnStr += ', ';
+                }
+            }*/
+        return returnStr;
+      }
+      // 달력 select 표시 설정
+      function setCalendarSelectView(exhibitInfoList) {
+        var nowDateStr = dateUtil.getToday("").substring(0, 6);
+        var twoWeekDay = getCurrentMonth();
+        if (nowDateStr < twoWeekDay) {
+          nowDateStr = twoWeekDay;
+        }
+
+        var yearStart = parseInt(minStartDT.substring(0, 4));
+        var yearEnd = parseInt(maxEndDT.substring(0, 4));
+
+        for (var i = yearStart; i <= yearEnd; i++) {
+          var monthStart =
+            i == yearStart ? parseInt(minStartDT.substring(4, 6)) : 1;
+          var monthEnd = i == yearEnd ? parseInt(maxEndDT.substring(4, 6)) : 12;
+
+          for (var j = monthStart; j <= monthEnd; j++) {
+            var optionDateStr = i.zf(4) + j.zf(2);
+
+            if (locale == "ko") {
+              $("#calendar_date").append(
+                '<option value="' +
+                  optionDateStr +
+                  '"' +
+                  (nowDateStr == optionDateStr ? " selected" : "") +
+                  ">" +
+                  stringUtil.formatDate(optionDateStr, "yyyy년 MM월") +
+                  "</option>"
+              );
+            } else {
+              $("#calendar_date").append(
+                '<option value="' +
+                  optionDateStr +
+                  '"' +
+                  (nowDateStr == optionDateStr ? " selected" : "") +
+                  ">" +
+                  dateUtil.getEngMonthNm(optionDateStr + "01", "S") +
+                  " " +
+                  optionDateStr.substring(0, 4) +
+                  "</option>"
+              );
+            }
+          }
+        }
+      }
+
+      // 달력 날짜 데이터(2주)
+      function getCalendarView(sYearMonth) {
+        var minStartDate = minStartDT.substring(0, 6);
+
+        if (sYearMonth < minStartDate) {
+          sYearMonth = minStartDate;
+        }
+
+        $("#calendarShowDate").val(sYearMonth);
+
+        $.ajax({
+          url: "http://ticket.leeum.org/leeum/personal/getCalendarListJson.do",
+          type: "POST",
+          contentType: "application/x-www-form-urlencoded; charset=utf-8",
+          data: {
+            foundCd: "M30",
+            locCd: "3",
+            date: sYearMonth,
+          },
+          dataType: "json",
+          cache: false,
+          success: function (data) {
+            var html = "";
+
+            var nDate = dateUtil.getToday("");
+            //var toHour = dateUtil.getHour('');
+
+            /*if(toHour>=17){
+                        nDate = dateUtil.addDate(nDate, 1);
+                    }*/
+            /*console.log(nDate);*/
+
+            var firstDay, firstDate, lastDate, maxCellCount;
+
+            // 현재월 기준으로 달력(그리드) 구성하는 cell 갯수
+            firstDay =
+              sYearMonth.substring(0, 4) +
+              "-" +
+              sYearMonth.substring(4, 6) +
+              "-01";
+            firstDate = new Date(firstDay);
+            lastDate = new Date(firstDay);
+            lastDate.setMonth(lastDate.getMonth() + 1);
+            lastDate.setDate(lastDate.getDate() - 1);
+            maxCellCount =
+              lastDate.getDate() + firstDate.getDay() + (6 - lastDate.getDay());
+
+            $.each(data.calendarList, function (i, item) {
+              if (i === maxCellCount) return false;
+
+              var iYearMonth = parseInt(
+                stringUtil.formatDate(item.DAY_STR, "yyyyMM")
+              );
+              var iDay = parseInt(stringUtil.formatDate(item.DAY_STR, "dd"));
+
+              html += (i + 1) % 7 == 1 ? "<tr>" : "";
+
+              var selectDateCheck =
+                $("#calendarSelectDate").val() == item.DAY_STR
+                  ? " pick_day"
+                  : "";
+              var dayCultureCheck =
+                item.DAY_STR == item.DAY_CULTURE ? "Y" : "N";
+
+              if (iYearMonth !== parseInt(sYearMonth)) {
+                html += '<td class="past_day"></td>';
+              } else {
+                if (item.DAY_STR == item.DAY_CLOSED) {
+                  html +=
+                    '<td class="closed_day"><a href="#" title=""><span>휴관</span></a></td>';
+
+                  // 오늘 ~ 2주전 가능 제약
+                } else if (!getTwoWeekChk(item.DAY_STR)) {
+                  html +=
+                    '<td class="past_day"><a href="#" title=""><span>' +
+                    iDay +
+                    "</span></a></td>";
+                } else {
+                  switch (dateUtil.compare(nDate, item.DAY_STR)) {
+                    case -1:
+                      if (iYearMonth > sYearMonth) {
+                        if (item.DAY_STR == item.DAY_CLOSED) {
+                          html +=
+                            '<td class="closed_day"><a href="#" title=""><span>휴관</span></a></td>';
+                        } else {
+                          html +=
+                            '<td class="past_day"><a href="#" title=""><span>' +
+                            iDay +
+                            "</span></a></td>";
+                        }
+                      } else {
+                        if (
+                          item.DAY_STR >= minStartDT &&
+                          item.DAY_STR <= maxEndDT
+                        ) {
+                          html +=
+                            '<td class="select_day' +
+                            selectDateCheck +
+                            '"><a href="#" title="예약 가능일"><span>' +
+                            iDay +
+                            '</span></a><input class="select_date" type="hidden" value="' +
+                            item.DAY_STR +
+                            '" /><input class="culture_check" type="hidden" value="' +
+                            dayCultureCheck +
+                            '" /></td>';
+                        } else {
+                          html +=
+                            '<td><a href="#" title="예약 가능일"><span>' +
+                            iDay +
+                            "</span></a></td>";
+                        }
+                      }
+                      break;
+                    case 0:
+                      if (iYearMonth == sYearMonth) {
+                        if (
+                          item.DAY_STR >= minStartDT &&
+                          item.DAY_STR <= maxEndDT
+                        ) {
+                          html +=
+                            '<td class="select_day' +
+                            selectDateCheck +
+                            '"><a href="#" title="예약 가능일"><span>' +
+                            iDay +
+                            '</span></a><input class="select_date" type="hidden" value="' +
+                            item.DAY_STR +
+                            '" /><input class="culture_check" type="hidden" value="' +
+                            dayCultureCheck +
+                            '" /></td>';
+                        } else {
+                          html +=
+                            '<td><a href="#" title="예약 가능일"><span>' +
+                            iDay +
+                            "</span></a></td>";
+                        }
+                      } else {
+                        html +=
+                          '<td class="past_day"><a href="#" title=""><span>' +
+                          iDay +
+                          "</span></a></td>";
+                      }
+                      break;
+                    case 1:
+                      if (iYearMonth > sYearMonth) {
+                        if (item.DAY_STR == item.DAY_CLOSED) {
+                          html +=
+                            '<td class="closed_day"><a href="#" title=""><span>휴관</span></a></td>';
+                        } else {
+                          html +=
+                            '<td class="past_day"><a href="#" title=""><span>' +
+                            iDay +
+                            "</span></a></td>";
+                        }
+                      } else {
+                        html +=
+                          '<td><a href="#" title="예약 가능일"><span>' +
+                          iDay +
+                          "</span></a></td>";
+                      }
+                      break;
+                    default:
+                      break;
+                  }
+                }
+              }
+
+              html += (i + 1) % 7 == 0 ? "</tr>" : "";
+            });
+
+            $("#calendar_body").html(html);
+          },
+        });
+
+        getMoveMonthButtonView(sYearMonth);
+      }
+
+      function getCurrentMonth() {
+        var returnval;
+        var toDate = dateUtil.getToday("");
+        if (dateUtil.getHour("") >= 18) {
+          toDate = dateUtil.addDate(toDate, 14); //15
+        }
+        returnval = toDate.substring(0, 6);
+        return returnval;
+      }
+
+      // 오늘  ~ 2주전 가능 체크
+      function getTwoWeekChk(dayVal) {
+        var rtnVal = false;
+        var toDate = dateUtil.getToday("");
+        var twoWeekDay = dateUtil.addDate(toDate, 14); //14
+        if (dateUtil.getHour("") >= 18) {
+          twoWeekDay = dateUtil.addDate(toDate, 15); //15
+        }
+        if (dayVal == null || dayVal == "" || dayVal == "undefined") {
+          return rtnVal;
+        }
+        toDate *= 1;
+        dayVal *= 1;
+        twoWeekDay *= 1;
+        if (toDate <= dayVal && dayVal < twoWeekDay) {
+          rtnVal = true;
+        }
+
+        return rtnVal;
+      }
+
+      // 달력 selectbox 이벤트
+      function changeCalendarSelectView($this) {
+        var selectDate = $this.value;
+        getCalendarView(selectDate);
+      }
+
+      // 달력 이전, 다음 버튼 이벤트
+      function moveMonth(monthValue) {
+        var calendarShowDate = $("#calendarShowDate").val();
+        var moveDate = dateUtil.addMonth(calendarShowDate + "01", monthValue);
+
+        // 달력 selectbox 설정
+        $("#calendar_date").val(moveDate.substring(0, 6));
+
+        getCalendarView(moveDate.substring(0, 6));
+      }
+
+      // 달력 이전, 다음 버튼 활성화 체크
+      function getMoveMonthButtonView(moveDate) {
+        var minStartDate = minStartDT.substring(0, 6);
+        var maxEndDate = maxEndDT.substring(0, 6);
+
+        // 이전 버튼 체크
+        if (moveDate == minStartDate) {
+          $("#calendar_previousBtn").off("click");
+          $("#calendar_previousBtn").addClass("disabled");
+        } else {
+          $("#calendar_previousBtn")
+            .off("click")
+            .on("click", function () {
+              moveMonth(-1);
+            });
+          $("#calendar_previousBtn").removeClass("disabled");
+        }
+
+        // 다음 버튼 체크
+        if (moveDate == maxEndDate) {
+          $("#calendar_nextBtn").off("click");
+          $("#calendar_nextBtn").addClass("disabled");
+        } else {
+          $("#calendar_nextBtn")
+            .off("click")
+            .on("click", function () {
+              moveMonth(1);
+            });
+          $("#calendar_nextBtn").removeClass("disabled");
+        }
+      }
+
+      // 스케쥴 데이터
+      function getTimeView(selectDate) {
+        $("#calendarSelectDate").val(selectDate);
+
+        $.ajax({
+          url: "/leeum/personal/getTimeListJson.do",
+          type: "POST",
+          contentType: "application/x-www-form-urlencoded; charset=utf-8",
+          data: {
+            foundCd: "M30",
+            locCd: "3",
+            eventCd: "202104",
+            placeGrp: "2",
+            planExhibit: "",
+            limitedMuzCd: "000110",
+            limitedEventCd: "202104",
+            selectGbn: "202104",
+            date: selectDate,
+          },
+          dataType: "json",
+          cache: false,
+          success: function (data) {
+            var nowDate = dateUtil.getToday("");
+            var nowTime = dateUtil.getTime("");
+
+            var dataN2 =
+              data.timeList != null ? Math.round(data.timeList.length / 2) : 0;
+            var event_cd = 202104;
+
+            $("#time_body2").find(".clickTime_left").html("");
+            $("#time_body2").find(".clickTime_right").html("");
+
+            $.each(data.timeList, function (i, item) {
+              var html = "";
+              var timeCheck = "";
+              var clsname = "";
+
+              var possibleCnt =
+                parseInt(item.PERSON_CNT) -
+                (parseInt(item.RSV_CNT) +
+                  parseInt(item.GRP_RSV_CNT) +
+                  parseInt(item.ENT_CNT));
+
+              if (possibleCnt <= 0) {
+                timeCheck = "sold_out";
+                clsname = "sold_out";
+              }
+
+              if (nowDate + nowTime > selectDate + item.SCHEDULE_TIME + "00") {
+                timeCheck = "closed";
+                clsname = "sold_out";
+              }
+
+              html += '<li class="select_time ' + clsname + '">';
+              html += '<a href="#" title="">';
+
+              if (timeCheck == "") {
+                html +=
+                  '<span class="date">' +
+                  item.SCHEDULE_TIME.substring(0, 2) +
+                  ":" +
+                  item.SCHEDULE_TIME.substring(2, 4) +
+                  "</span>";
+                if (locale == "ko") {
+                  html += "<span>예약 가능</span>";
+                } else {
+                  html += "<span>Available</span>";
+                }
+              } else {
+                html +=
+                  '<span class="date" style="float:left;">' +
+                  item.SCHEDULE_TIME.substring(0, 2) +
+                  ":" +
+                  item.SCHEDULE_TIME.substring(2, 4) +
+                  "</span>";
+                if (event_cd == "202202") {
+                  if (
+                    selectDate >= "20230406" &&
+                    item.SCHEDULE_TIME == "1000" &&
+                    parseInt(item.PERSON_CNT) == 0
+                  ) {
+                    html += '<span style="float:right;">교육 전용 </span>';
+                  } else if (timeCheck == "closed") {
+                    html += '<span style="float:right;">마감</span>';
+                  } else {
+                    html += '<span style="float:right;">매진</span>';
+                  }
+                } else {
+                  if (
+                    item.SCHEDULE_TIME == "1000" &&
+                    parseInt(item.PERSON_CNT) == 0
+                  ) {
+                    html += '<span style="float:right;">교육 전용 </span>';
+                  } else if (timeCheck == "closed") {
+                    html += '<span style="float:right;">마감</span>';
+                  } else {
+                    html += '<span style="float:right;">매진</span>';
+                  }
+                }
+              }
+
+              html +=
+                '<input type="hidden" name="possibleCnt" value="' +
+                possibleCnt +
+                '" />';
+
+              html += "</a>";
+              html += "</li>";
+
+              if (i < dataN2) {
+                $("#time_body2").find(".clickTime_left").append(html);
+              } else {
+                $("#time_body2").find(".clickTime_right").append(html);
+              }
+            });
+
+            $("#calendarSelectTimeSeq").val(data.commonMap.seq);
+
+            nextOpen(0);
+          },
+        });
+      }
+
+      // 인원 데이터
+      function getPeopleView() {
+        var selectDate = $("#calendarSelectDate").val();
+
+        var cultureCheck = $("#cultureDayYn").val();
+
+        $.ajax({
+          url: "/leeum/personal/getPeopleListJson.do",
+          type: "POST",
+          contentType: "application/x-www-form-urlencoded; charset=utf-8",
+          data: {
+            muzCd: "000110",
+            gubun: cultureCheck == "N" ? "1" : "3",
+            locCd: "3",
+            date: selectDate,
+            limitedMuzCd: "000110",
+            selectGbn: "202104",
+          },
+          dataType: "json",
+          cache: false,
+          success: function (data) {
+            var html = "";
+
+            var possibleCnt = $("#calendarPossibleCnt").val();
+
+            html += '<div class="num_check">';
+
+            $.each(data.peopleList, function (i, item) {
+              html += '<div class="choice_box">';
+              html += "    <dl>";
+              html += "        <dt>" + item.DISPLAY_NM + "</dt>";
+              html += "        <dd>";
+              if (item.TICK_PRICE != 0) {
+                html +=
+                  "            <strong>" +
+                  stringUtil.setComma(item.TICK_PRICE) +
+                  "</strong> <span>원</span>";
+              } else {
+                html += "            <strong>무료</strong>";
+              }
+              html += "        </dd>";
+              html += "    </dl>";
+
+              var peopleTypeId = "peopleType" + (i + 1).zf(2);
+
+              html += '    <div class="gender" id="' + peopleTypeId + '">';
+              html +=
+                '        <input type="hidden" id="' +
+                peopleTypeId +
+                '_muzCd" value="' +
+                item.MUZ_CD +
+                '" />';
+              html +=
+                '        <input type="hidden" id="' +
+                peopleTypeId +
+                '_displayNm" value="' +
+                item.DISPLAY_NM +
+                '" />';
+              html +=
+                '        <input type="hidden" id="' +
+                peopleTypeId +
+                '_floatNm" value="' +
+                item.FLOAT_NM +
+                '" />';
+              html +=
+                '        <input type="hidden" id="' +
+                peopleTypeId +
+                '_tickNm" value="' +
+                item.TICK_NM +
+                '" />';
+              html +=
+                '        <input type="hidden" id="' +
+                peopleTypeId +
+                '_gubun" value="' +
+                item.GUBUN +
+                '" />';
+              html +=
+                '        <input type="hidden" id="' +
+                peopleTypeId +
+                '_ageGbn" value="' +
+                item.AGE_GBN +
+                '" />';
+              html +=
+                '        <input type="hidden" id="' +
+                peopleTypeId +
+                '_tickCd" value="' +
+                item.TICK_CD +
+                '" />';
+              html +=
+                '        <input type="hidden" id="' +
+                peopleTypeId +
+                '_tickPrice" value="' +
+                item.TICK_PRICE +
+                '" />';
+              html +=
+                '        <input type="radio" id="' +
+                peopleTypeId +
+                '_0" name="' +
+                peopleTypeId +
+                '" value="0" checked />';
+              html += '        <label for="' + peopleTypeId + '_0">0</label>';
+              html +=
+                '        <input type="radio" id="' +
+                peopleTypeId +
+                '_1" name="' +
+                peopleTypeId +
+                '" value="1" ' +
+                (possibleCnt >= 1 ? "" : "disabled") +
+                "/>";
+              html += '        <label for="' + peopleTypeId + '_1">1</label>';
+              html +=
+                '        <input type="radio" id="' +
+                peopleTypeId +
+                '_2" name="' +
+                peopleTypeId +
+                '" value="2" ' +
+                (possibleCnt >= 2 ? "" : "disabled") +
+                "/>";
+              html += '        <label for="' + peopleTypeId + '_2">2</label>';
+              html +=
+                '        <input type="radio" id="' +
+                peopleTypeId +
+                '_3" name="' +
+                peopleTypeId +
+                '" value="3" ' +
+                (possibleCnt >= 3 ? "" : "disabled") +
+                "/>";
+              html += '        <label for="' + peopleTypeId + '_3">3</label>';
+              html +=
+                '        <input type="radio" id="' +
+                peopleTypeId +
+                '_4" name="' +
+                peopleTypeId +
+                '" value="4" ' +
+                (possibleCnt >= 4 ? "" : "disabled") +
+                "/>";
+              html += '        <label for="' + peopleTypeId + '_4">4</label>';
+              /*html += '        <input type="radio" id="' + peopleTypeId + '_5" name="' + peopleTypeId + '" value="5" ' + (possibleCnt >= 5 ? '' : 'disabled') + '/>';
+                        html += '        <label for="' + peopleTypeId + '_5">5</label>';*/
+              html += "    </div>";
+              html += "</div>";
+            });
+
+            html += "</div>";
+
+            $("#people_body").html(html);
+
+            nextOpen(1);
+          },
+        });
+      }
+
+      function updateTotalPriceView() {
+        var totalPeople = 0;
+        var totalPrice = 0;
+
+        var myPeopleStr = "";
+
+        $("div[id^=peopleType]").each(function (i) {
+          var peopleTypeId = $(this).attr("id");
+
+          var peopleCnt = parseInt(
+            $('input:radio[name="' + peopleTypeId + '"]:checked').val()
+          );
+
+          var floatNm = $("#" + peopleTypeId + "_floatNm").val();
+          var tickPrice = parseInt($("#" + peopleTypeId + "_tickPrice").val());
+          var ageGbn = $("#" + peopleTypeId + "_ageGbn").val();
+
+          if (ageGbn == "5") {
+            $("#selectPreschoolerCnt").val(peopleCnt);
+          }
+
+          if (peopleCnt != 0) {
+            myPeopleStr +=
+              (myPeopleStr != "" ? ", " : "") + floatNm + " " + peopleCnt;
+          }
+
+          totalPeople += peopleCnt;
+          totalPrice += tickPrice * peopleCnt;
+        });
+
+        // 인원선택 정보 업데이트
+        $("div[id^=peopleType]").each(function (i) {
+          var peopleTypeId = $(this).attr("id");
+
+          var peopleCnt = parseInt(
+            $('input:radio[name="' + peopleTypeId + '"]:checked').val()
+          );
+
+          var possibleCnt = $("#calendarPossibleCnt").val();
+
+          var maxCnt = possibleCnt <= 4 ? possibleCnt : 4;
+
+          for (var j = peopleCnt + 1, k = 1; j <= 4; j++, k++) {
+            if (maxCnt - totalPeople >= k) {
+              $("#" + peopleTypeId + "_" + j).attr("disabled", false);
+            } else {
+              $("#" + peopleTypeId + "_" + j).attr("disabled", true);
+            }
+          }
+        });
+
+        $("#floatPC_people, #floatMO_people").text("인원 - " + myPeopleStr);
+        $("#displayPeople").val(myPeopleStr);
+        $("#totalPrice_strong").text(stringUtil.setComma(totalPrice));
+        $("#totalPrice_span").text("원");
+        $("#totalPeople").val(totalPeople);
+
+        if (totalPeople != 0) {
+          $("#selectInfoCheck").addClass("on");
+          $("#selectInfoCheck").off("click").on("click", selectInfoCheck);
+        } else {
+          $("#selectInfoCheck").removeClass("on").off("click");
+        }
+      }
+
+      // 잔여인원 수 체크, 인원 선점하기 -> 페이지 이동
+      function selectInfoCheck() {
+        var totalPeople = $("#totalPeople").val();
+        var preschoolerCnt = $("#selectPreschoolerCnt").val();
+
+        // 미취학아동 인원 체크
+        var roundCnt = Math.round(preschoolerCnt / 2);
+
+        if (roundCnt > totalPeople - preschoolerCnt) {
+          $("#pop_layer_02").show();
+          return false;
+        }
+
+        var timeStr = stringUtil.replaceAll(
+          $("#calendarSelectTime").val(),
+          ":",
+          ""
+        );
+
+        $.ajax({
+          url: "http://ticket.leeum.org/leeum/personal/getSelectInfoCheck.do",
+          type: "POST",
+          contentType: "application/x-www-form-urlencoded; charset=utf-8",
+          data: {
+            foundCd: "M30",
+            locCd: "3",
+            eventCd: "202104",
+            placeGrp: "2",
+            planExhibit: "",
+            date: $("#calendarSelectDate").val(),
+            time: timeStr,
+            totalPeople: parseInt(totalPeople),
+            limitedMuzCd: "000110",
+            limitedEventCd: "202104",
+            selectGbn: "202104",
+          },
+          dataType: "json",
+          cache: false,
+          success: function (data) {
+            var result = data.result;
+
+            if (result) {
+              movePageCheck();
+            } else {
+              var falseGbn = data.false_gbn;
+
+              if (falseGbn == 1) {
+                $("#pop_layer_05").show();
+                return false;
+              }
+            }
+          },
+        });
+      }
+
+      // 이동할 페이지 체크
+      function movePageCheck() {
+        var tickCdStr = "";
+        var tickCntStr = "";
+
+        var totalPrice = 0;
+
+        $("div[id^=peopleType]").each(function (i) {
+          var peopleTypeId = $(this).attr("id");
+
+          var tickCd = $("#" + peopleTypeId + "_tickCd").val();
+          var tickCnt = parseInt(
+            $('input:radio[name="' + peopleTypeId + '"]:checked').val()
+          );
+          var tickPrice = parseInt($("#" + peopleTypeId + "_tickPrice").val());
+
+          if (tickCnt != 0) {
+            tickCdStr += (tickCdStr != "" ? "|" : "") + tickCd;
+            tickCntStr += (tickCntStr != "" ? "|" : "") + tickCnt;
+            totalPrice += tickPrice * tickCnt;
+          }
+        });
+
+        $("#tickCd").val(tickCdStr);
+        $("#tickCnt").val(tickCntStr);
+        $("#totalPrice").val(totalPrice);
+        $("#mdate").val($("#calendarSelectDate").val());
+        $("#eTime").val(
+          stringUtil.replaceAll($("#calendarSelectTime").val(), ":", "")
+        );
+
+        var moveForm = $("#moveForm");
+
+        var loginGbn = false;
+
+        if (loginGbn) {
+          $("#countryNo").val("82");
+          $("#countryCode").val("KOR");
+          moveForm.attr("action", "/leeum/personal/personalConfirm.do");
+        } else {
+          var gstLoginGbn = false;
+          if (gstLoginGbn) {
+            moveForm.attr("action", "/leeum/personal/personalConfirm.do");
+          } else {
+            moveForm.attr("action", "/leeum/login.do");
+          }
+        }
+
+        moveForm.submit();
+      }
+
+      // 날짜선택 및 시간선택 정보 업데이트
+      function updateClickDayView(thisValue) {
+        $(".select_day").removeClass("pick_day");
+        $(".select_day > a").attr("title", "예약 가능일");
+        thisValue.parents(".select_day").addClass("pick_day");
+        thisValue.attr("title", "예약 선택일");
+
+        $(".select_time").removeClass("pick");
+        $("#step2").removeClass("open");
+        $(".stepChk > li").eq(2).find(".accordion_cont").slideUp(400);
+        $(".stepChk > li").eq(2).removeClass("open");
+        var selectDate = thisValue
+          .parents(".select_day")
+          .find(".select_date")
+          .val();
+        $("#cultureDayYn").val(
+          thisValue.parents(".select_day").find(".culture_check").val()
+        );
+        getTimeView(selectDate);
+        if (locale == "ko") {
+          $("#floatPC_daytime, #floatMO_daytime").text(
+            "일시 - " +
+              stringUtil.formatDate(selectDate, "MM월 dd일") +
+              "(" +
+              dateUtil.getDayNm(selectDate, locale) +
+              ")"
+          );
+        } else {
+          $("#floatPC_daytime, #floatMO_daytime").text(
+            "일시 - " +
+              dateUtil.getEngMonthNm(selectDate, "S") +
+              " " +
+              selectDate.substring(6, 8) +
+              " (" +
+              dateUtil.getDayNm(selectDate, locale) +
+              ")"
+          );
+        }
+        $("#floatPC_people, #floatMO_people").text("인원 - ");
+
+        // 금액
+        $("#totalPrice_strong").text("");
+        $("#totalPrice_span").text("");
+
+        $("#totalPeople").val("0");
+        $("#selectInfoCheck").removeClass("on").off("click");
+        $("#step1 .tit")
+          .off("click")
+          .on("click", function () {
+            titleClickOpenEvent($(this));
+          });
+        $("#step2 .tit").off("click");
+      }
+
+      // 시간선택 및 인원선택 정보 업데이트
+      function updateClickTimeView(thisValue) {
+        $(".select_time").removeClass("pick");
+        $(".select_time > a").attr("title", "");
+        thisValue.parents(".select_time").addClass("pick");
+        thisValue.attr("title", "시간 선택됨");
+
+        getPeopleView();
+        $("#calendarSelectTime").val(thisValue.find(".date").text());
+        $("#calendarPossibleCnt").val(
+          thisValue.find('input[name="possibleCnt"]').val()
+        );
+        $("#selectPreschoolerCnt").val("0");
+        var selectDate = $("#calendarSelectDate").val();
+        if (locale == "ko") {
+          $("#floatPC_daytime, #floatMO_daytime").text(
+            "일시 - " +
+              stringUtil.formatDate(selectDate, "MM월 dd일") +
+              "(" +
+              dateUtil.getDayNm(selectDate, locale) +
+              ") " +
+              thisValue.find(".date").text()
+          );
+        } else {
+          $("#floatPC_daytime, #floatMO_daytime").text(
+            "일시 - " +
+              dateUtil.getEngMonthNm(selectDate, "S") +
+              " " +
+              selectDate.substring(6, 8) +
+              " (" +
+              dateUtil.getDayNm(selectDate, locale) +
+              ") " +
+              thisValue.find(".date").text()
+          );
+        }
+        $("#floatPC_people, #floatMO_people").text("인원 - ");
+
+        $("#totalPrice_strong").text("");
+        $("#totalPrice_span").text("");
+
+        $("#totalPeople").val("0");
+        $("#selectInfoCheck").removeClass("on").off("click");
+        $("#step2 .tit")
+          .off("click")
+          .on("click", function () {
+            titleClickOpenEvent($(this));
+          });
+        $("#popLayer01ShowYn").val("N");
+      }
+
+      // 인원선택 체크
+      function clickPeopleCheck($this) {
+        var pepleTypeId = $this.attr("for");
+
+        var disabled = $("#" + pepleTypeId).prop("disabled");
+
+        if (disabled) {
+          // 인원 숫자 버튼 비활성화 상태
+
+          var possibleCnt = $("#calendarPossibleCnt").val();
+
+          if (possibleCnt >= 5) {
+            $("#pop_layer_03").show();
+          } else {
+            $("#pop_layer_04").show();
+          }
+
+          return false;
+        } else {
+          // 인원 숫자 버튼 활성화 상태
+
+          var clickId = pepleTypeId.split("_")[0];
+
+          // 클릭한 권종에 대한 원래인원, 클릭인원
+          var bValue = parseInt(
+            $('input:radio[name="' + clickId + '"]:checked').val()
+          );
+          var cValue = parseInt(pepleTypeId.split("_")[1]);
+
+          var totalPeople =
+            parseInt($("#totalPeople").val()) + (cValue - bValue);
+          var possibleCnt = parseInt($("#calendarPossibleCnt").val());
+          var preschoolerCnt = parseInt($("#selectPreschoolerCnt").val());
+
+          var ageGbn = $("#" + clickId + "_ageGbn").val();
+
+          // 권종 체크 (미취학아동)
+          if (ageGbn == "5") {
+            preschoolerCnt += cValue - bValue;
+          }
+
+          var roundCnt = Math.round(preschoolerCnt / 2);
+
+          // 미취학 아동의 보호자 인원 체크
+          if (roundCnt > totalPeople - preschoolerCnt) {
+            $("#pop_layer_02").show();
+            return false;
+          }
+
+          if (ageGbn == "5" && $("#popLayer01ShowYn").val() == "N") {
+            $("#popLayer01ShowYn").val("Y");
+            $("#pop_layer_01").show();
+          }
+
+          return true;
+        }
+      }
+
+      function calendar_refresh() {
+        WG_StartWebGate(
+          1742, // GATE-ID
+          function () {
+            /*var sYearMonth = dateUtil.getToday('').substring(0, 6);
+                    var twoWeekDay = getCurrentMonth();
+                    if(sYearMonth < twoWeekDay) {
+                        sYearMonth = twoWeekDay;
+                    }*/
+            var calendarShowDate = $("#calendarShowDate").val();
+            $("#calendar_date").val(calendarShowDate);
+            getCalendarView(calendarShowDate);
+          },
+          "FRONTEND", // fixed
+          "서비스 접속대기 중(Please wait.)", // 대기UI 제목
+          false, // fixed
+          function () {
+            // 유량제어 서비스 장애 시 처리
+            var calendarShowDate = $("#calendarShowDate").val();
+            $("#calendar_date").val(calendarShowDate);
+            getCalendarView(calendarShowDate);
+          }
+        );
+      }
+    </script>
+  </head>
+  <body>
+    <div id="wrap">
+      <!-- 컨텐츠영역 시작 -->
+      <div id="container" class="container" tabindex="-1">
+        <div class="section prs_ticketing01">
+          <!-- section 에 해당페이지 명 클래스로 css 제어 -->
+
+          <!-- content -->
+          <div class="content">
+            <!-- float_cont -->
+            <!-- pc 버전 -->
+            <div class="float_cont floatPC" style="margin-top: 0px">
+              <h3 class="tit_h3">개인예매</h3>
+              <div class="float_inner">
+                <div class="exhib_info">
+                  <div class="exhib_tit">
+                    <!-- 더보기 변경 - 2020-12-17 -->
+                    <ul class="exhib_list" id="floatPC_layer">
+                      <li>[기획전] 조선의 백자, 군자지향 君子志向</li>
+                    </ul>
+                    <!-- //더보기 변경 - 2020-12-17 -->
+                  </div>
+                  <ul class="list_info">
+                    <li id="floatPC_possible">장소 - 아동교육문화센터</li>
+                    <li id="floatPC_daytime">일시 - 03월 29일(수)</li>
+                    <li id="floatPC_people">인원 -</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!--// pc 버전 -->
+
+            <!--// float_cont -->
+
+            <input
+              type="hidden"
+              id="calendarShowDate"
+              name="calendarShowDate"
+              value="202303"
+            />
+            <input
+              type="hidden"
+              id="calendarSelectDate"
+              name="calendarSelectDate"
+              value="20230329"
+            />
+            <input
+              type="hidden"
+              id="calendarSelectTime"
+              name="calendarSelectTime"
+              value=""
+            />
+            <input
+              type="hidden"
+              id="calendarSelectTimeSeq"
+              name="calendarSelectTimeSeq"
+              value="2044"
+            />
+            <input
+              type="hidden"
+              id="calendarPossibleCnt"
+              name="calendarPossibleCnt"
+              value=""
+            />
+            <input
+              type="hidden"
+              id="selectPreschoolerCnt"
+              name="selectPreschoolerCnt"
+              value=""
+            />
+            <input
+              type="hidden"
+              id="totalPeople"
+              name="totalPeople"
+              value="0"
+            />
+
+            <!-- rgt_cont -->
+            <div class="rgt_cont">
+              <div class="accordion_wrap">
+                <ul class="stepChk">
+                  <!-- 날짜 선택 -->
+                  <li class="open" id="step0">
+                    <!-- 선택 활설화 시 dl 에 class open 추가 -->
+                    <a
+                      href="javascript:void(0);"
+                      class="tit"
+                      title="예약 가능일"
+                      id="step0-head"
+                      tabindex="0"
+                    >
+                      <h3 class="g-title-1">날짜 선택</h3>
+                    </a>
+                    <div class="accordion_cont">
+                      <div class="calendar_wrap">
+                        <div class="calendar_top">
+                          <!-- 개인 연/월 -->
+                          <select
+                            id="calendar_date"
+                            onchange="changeCalendarSelectView(this)"
+                            style="width: 110px"
+                            title="년월 선택"
+                          >
+                            <option value="202303" selected="">
+                              2023년 03월
+                            </option>
+                            <option value="202304">2023년 04월</option>
+                            <option value="202305">2023년 05월</option>
+                          </select>
+                          <ul class="month_refresh">
+                            <li>
+                              <button
+                                onclick="calendar_refresh();"
+                                title="새로고침"
+                              >
+                                새로고침
+                              </button>
+                            </li>
+                          </ul>
+                          <ul class="month_choice">
+                            <li>
+                              <a
+                                href="javascript:void(0);"
+                                class="p_month disabled"
+                                id="calendar_previousBtn"
+                                title="이전"
+                                >이전</a
+                              >
+                            </li>
+                            <li>
+                              <a
+                                href="javascript:void(0);"
+                                class="n_month"
+                                id="calendar_nextBtn"
+                                title="다음"
+                                >다음</a
+                              >
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="calendar_cont clickDay">
+                          <table>
+                            <caption>
+                              예매달력
+                            </caption>
+                            <colgroup>
+                              <col sytle="width:auto" />
+                              <col sytle="width:auto" />
+                              <col sytle="width:auto" />
+                              <col sytle="width:auto" />
+                              <col sytle="width:auto" />
+                              <col sytle="width:auto" />
+                              <col sytle="width:auto" />
+                            </colgroup>
+                            <thead>
+                              <tr>
+                                <th scope="col">SUN</th>
+                                <th scope="col">MON</th>
+                                <th scope="col">TUE</th>
+                                <th scope="col">WED</th>
+                                <th scope="col">THU</th>
+                                <th scope="col">FRI</th>
+                                <th scope="col">SAT</th>
+                              </tr>
+                            </thead>
+                            <tbody id="calendar_body">
+                              <tr>
+                                <td class="past_day"></td>
+                                <td class="past_day"></td>
+                                <td class="past_day"></td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>1</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>2</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>3</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>4</span></a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>5</span></a>
+                                </td>
+                                <td class="closed_day">
+                                  <a href="#" title=""><span>휴관</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>7</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>8</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>9</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>10</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>11</span></a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>12</span></a>
+                                </td>
+                                <td class="closed_day">
+                                  <a href="#" title=""><span>휴관</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>14</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>15</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>16</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>17</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>18</span></a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>19</span></a>
+                                </td>
+                                <td class="closed_day">
+                                  <a href="#" title=""><span>휴관</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>21</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>22</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>23</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>24</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>25</span></a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>26</span></a>
+                                </td>
+                                <td class="closed_day">
+                                  <a href="#" title=""><span>휴관</span></a>
+                                </td>
+                                <td class="past_day">
+                                  <a href="#" title=""><span>28</span></a>
+                                </td>
+                                <td class="select_day pick_day">
+                                  <a href="#" title="예약 선택일"
+                                    ><span>29</span></a
+                                  ><input
+                                    class="select_date"
+                                    type="hidden"
+                                    value="20230329"
+                                  /><input
+                                    class="culture_check"
+                                    type="hidden"
+                                    value="Y"
+                                  />
+                                </td>
+                                <td class="select_day">
+                                  <a href="#" title="예약 가능일"
+                                    ><span>30</span></a
+                                  ><input
+                                    class="select_date"
+                                    type="hidden"
+                                    value="20230330"
+                                  /><input
+                                    class="culture_check"
+                                    type="hidden"
+                                    value="N"
+                                  />
+                                </td>
+                                <td class="select_day">
+                                  <a href="#" title="예약 가능일"
+                                    ><span>31</span></a
+                                  ><input
+                                    class="select_date"
+                                    type="hidden"
+                                    value="20230331"
+                                  /><input
+                                    class="culture_check"
+                                    type="hidden"
+                                    value="N"
+                                  />
+                                </td>
+                                <td class="past_day"></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <ul class="list_day">
+                          <li>예약 불가일</li>
+                          <li>예약 가능일</li>
+                          <li>예약 선택일</li>
+                        </ul>
+                        <dl class="calendar_info">
+                          <dt>예매 및 관람 안내</dt>
+                          <dd>
+                            <p>
+                              온라인 개인예매는 관람일 14일 전부터 가능하며,
+                              개인별 예매 가능한 인원은 최대 4명입니다.
+                            </p>
+                            <p>
+                              안전하고 쾌적한 관람을 위하여 반드시 예매 사항을
+                              지켜주시기 바라며, 방문이 어려우시면 다른 관람객을
+                              위해 반드시 예매를 취소해 주시기 바랍니다.
+                            </p>
+                            <p>
+                              선택하신 관람 시간부터 다음 관람 시간 전까지 입장
+                              가능하며, 전시 관람은 18시까지 가능합니다.
+                            </p>
+                            <p>
+                              마우리치오 카텔란: WE 전시는 개인에 따라 민감한
+                              내용을 포함할 수 있으며, 특히 아동·청소년 관람객은
+                              유의할 필요가 있으므로 관람에 참고하여 주시기
+                              바랍니다.
+                            </p>
+                            <p>
+                              주차장이 협소하여 만차 시 주차가 불가하오니 가급적
+                              대중교통을 이용하여 주시기 바랍니다.
+                            </p>
+                          </dd>
+                        </dl>
+                      </div>
+                    </div>
+                  </li>
+                  <!-- 시간 선택 -->
+                  <li id="step1" class="">
+                    <!-- 선택 활성화 시 li 에 class open 추가 -->
+                    <a
+                      href="javascript:void(0);"
+                      class="tit"
+                      title="시간 선택"
+                      id="step1-head"
+                      tabindex="0"
+                    >
+                      <h3 class="g-title-1">시간 선택</h3>
+                    </a>
+                    <div class="accordion_cont" style="display: none">
+                      <!-- 추가  -->
+                      <div class="time_wrap clickTime" id="time_body2">
+                        <ul class="clickTime_left">
+                          <li class="select_time sold_out">
+                            <a href="#" title=""
+                              ><span class="date" style="float: left"
+                                >10:00</span
+                              ><span style="float: right">교육 전용 </span
+                              ><input
+                                type="hidden"
+                                name="possibleCnt"
+                                value="-25"
+                            /></a>
+                          </li>
+                          <li class="select_time sold_out">
+                            <a href="#" title=""
+                              ><span class="date" style="float: left"
+                                >11:00</span
+                              ><span style="float: right">마감</span
+                              ><input
+                                type="hidden"
+                                name="possibleCnt"
+                                value="2"
+                            /></a>
+                          </li>
+                          <li class="select_time sold_out">
+                            <a href="#" title=""
+                              ><span class="date" style="float: left"
+                                >12:00</span
+                              ><span style="float: right">마감</span
+                              ><input
+                                type="hidden"
+                                name="possibleCnt"
+                                value="0"
+                            /></a>
+                          </li>
+                          <li class="select_time sold_out">
+                            <a href="#" title=""
+                              ><span class="date" style="float: left"
+                                >13:00</span
+                              ><span style="float: right">마감</span
+                              ><input
+                                type="hidden"
+                                name="possibleCnt"
+                                value="-13"
+                            /></a>
+                          </li>
+                        </ul>
+                        <ul class="clickTime_right">
+                          <li class="select_time sold_out">
+                            <a href="#" title=""
+                              ><span class="date" style="float: left"
+                                >14:00</span
+                              ><span style="float: right">마감</span
+                              ><input
+                                type="hidden"
+                                name="possibleCnt"
+                                value="3"
+                            /></a>
+                          </li>
+                          <li class="select_time sold_out">
+                            <a href="#" title=""
+                              ><span class="date" style="float: left"
+                                >15:00</span
+                              ><span style="float: right">마감</span
+                              ><input
+                                type="hidden"
+                                name="possibleCnt"
+                                value="0"
+                            /></a>
+                          </li>
+                          <li class="select_time sold_out">
+                            <a href="#" title=""
+                              ><span class="date" style="float: left"
+                                >16:00</span
+                              ><span style="float: right">매진</span
+                              ><input
+                                type="hidden"
+                                name="possibleCnt"
+                                value="0"
+                            /></a>
+                          </li>
+                          <li class="select_time sold_out">
+                            <a href="#" title=""
+                              ><span class="date" style="float: left"
+                                >17:00</span
+                              ><span style="float: right">매진</span
+                              ><input
+                                type="hidden"
+                                name="possibleCnt"
+                                value="0"
+                            /></a>
+                          </li>
+                        </ul>
+                        <div style="clear: both"></div>
+                      </div>
+                    </div>
+                  </li>
+                  <!-- 인원 선택 -->
+                  <li id="step2">
+                    <!-- 선택 활설화 시 dl 에 class open 추가 -->
+                    <a
+                      href="javascript:void(0);"
+                      class="tit"
+                      title="인원 선택"
+                      id="step2-head"
+                      tabindex="0"
+                    >
+                      <h3 class="g-title-1">인원 선택&nbsp;</h3>
+                    </a>
+                    <div class="accordion_cont" style="display: none">
+                      <div
+                        class="people_wrap clickPeople"
+                        id="people_body"
+                      ></div>
+                      <!-- g_box -->
+                      <div class="g_box">
+                        <dl>
+                          <dt>GUIDE</dt>
+                          <dd>
+                            예매완료 후 모바일티켓(QR)을 이용하시면 더욱 편리한
+                            전시관람이 가능합니다.<br />(각 전시장 입구에 준비된
+                            QR 리더기에 모바일 티켓을 스캔해주시기 바랍니다.)
+                          </dd>
+                          <dd>
+                            유료 전시의 경우 무료 및 할인 대상자는 모바일
+                            티켓(QR)이 전송되지 않으며, 로비 안내데스크에서 해당
+                            증빙 확인 및 종이티켓 발권 후 전시관람이 가능합니다.
+                            증빙 미지참 시 현장에서 차액을 지불하셔야 함을
+                            유의해주시기 바랍니다.
+                          </dd>
+                          <dd>
+                            리움 멤버십 회원은 별도의 예매 없이 상시 관람이
+                            가능합니다. (멤버십 전용데스크 운영)
+                          </dd>
+                          <dd>
+                            매월 마지막주 수요일 ‘문화가 있는 날’에는 50% 할인된
+                            가격에 관람이 가능합니다. (중복할인 없음)
+                          </dd>
+                        </dl>
+                      </div>
+                      <!--// g_box -->
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="lowerBtn open">
+                <div class="total_wrap">
+                  <dl>
+                    <dt>총 금액</dt>
+                    <dd>
+                      <strong id="totalPrice_strong"></strong
+                      ><span id="totalPrice_span"></span>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="lower_btn">
+                  <a href="javascript:void(0);" id="selectInfoCheck">다음</a>
+                </div>
+              </div>
+            </div>
+            <!--// rgt_cont -->
+          </div>
+          <!--// content -->
+        </div>
+      </div>
+      <!-- (알림) 레이어 팝업 - 2020-12-17 -->
+      <!-- 미취학 아동 -->
+      <div class="pop_layer" id="pop_layer_01">
+        <input type="hidden" id="popLayer01ShowYn" value="N" />
+        <div class="dimmed"></div>
+        <div class="layer_wrap alert_type2">
+          <div class="layer_container type1">
+            <div class="cont">
+              <p>
+                만 6세 이하 미취학 아동은<br />보호자 동반 시 관람이
+                가능합니다.<br />(보호자 1명당 2명까지 예매 가능)
+              </p>
+            </div>
+            <div class="btn_box">
+              <a href="#layer2" class="btn_ly btn">확인</a>
+            </div>
+            <a href="javascript:void(0);" class="btn_ly btn_lyclose">닫기</a>
+          </div>
+        </div>
+      </div>
+      <!-- 미취학 아동 - 보호자 -->
+      <div class="pop_layer" id="pop_layer_02">
+        <div class="dimmed"></div>
+        <div class="layer_wrap alert_type2">
+          <div class="layer_container type1">
+            <div class="cont">
+              <p>
+                만 6세 이하 미취학 아동은<br />보호자 1명당 2명까지 예매
+                가능합니다.
+              </p>
+            </div>
+            <div class="btn_box">
+              <a href="#layer2" class="btn_ly btn">확인</a>
+            </div>
+            <a href="javascript:void(0);" class="btn_ly btn_lyclose">닫기</a>
+          </div>
+        </div>
+      </div>
+      <!-- 인원 알림 -->
+      <div class="pop_layer" id="pop_layer_03">
+        <div class="dimmed"></div>
+        <div class="layer_wrap alert_type2">
+          <div class="layer_container type1">
+            <div class="cont">
+              <p>인원 선택은 최대 4명까지 가능합니다.</p>
+            </div>
+            <div class="btn_box">
+              <a href="#layer2" class="btn_ly btn">확인</a>
+            </div>
+            <a href="javascript:void(0);" class="btn_ly btn_lyclose">닫기</a>
+          </div>
+        </div>
+      </div>
+      <div class="pop_layer" id="pop_layer_04">
+        <div class="dimmed"></div>
+        <div class="layer_wrap alert_type2">
+          <div class="layer_container type1">
+            <div class="cont">
+              <p>예약 가능한 인원을 확인해주세요.</p>
+            </div>
+            <div class="btn_box">
+              <a href="#layer2" class="btn_ly btn">확인</a>
+            </div>
+            <a href="javascript:void(0);" class="btn_ly btn_lyclose">닫기</a>
+          </div>
+        </div>
+      </div>
+      <div class="pop_layer" id="pop_layer_05">
+        <div class="dimmed"></div>
+        <div class="layer_wrap alert_type2">
+          <div class="layer_container type1">
+            <div class="cont">
+              <p>
+                선택하신 시간에 가능한 인원이 변경되었습니다. 확인 후 다시 선택
+                해주세요.
+              </p>
+            </div>
+            <div class="btn_box">
+              <a href="#layer2" class="btn_ly btn">확인</a>
+            </div>
+            <a href="javascript:void(0);" class="btn_ly btn_lyclose">닫기</a>
+          </div>
+        </div>
+      </div>
+      <!-- //레이어 팝업 - 2020-12-17 -->
+
+      <div class="pop_layer" id="pop_layer_06">
+        <div class="dimmed"></div>
+        <div class="layer_wrap alert_type2">
+          <div class="layer_container type1">
+            <div class="cont">
+              <p>개인별 예매 가능한 인원은 최대 4명입니다.</p>
+            </div>
+            <div class="btn_box">
+              <a href="#layer2" class="btn_ly btn">확인</a>
+            </div>
+            <a href="javascript:void(0);" class="btn_ly btn_lyclose">닫기</a>
+          </div>
+        </div>
+      </div>
+      <!-- //레이어 팝업 - 2020-12-17 -->
+
+      <form id="moveForm" name="moveForm" action="" method="post">
+        <input
+          type="hidden"
+          name="goReturnUrl"
+          value="/leeum/personal/personalConfirm.do"
+        />
+        <input
+          type="hidden"
+          name="returnUrl"
+          value="/leeum/personal/personalConfirm.do"
+        />
+        <input type="hidden" id="foundCd" name="foundCd" value="M30" />
+        <input type="hidden" id="locCd" name="locCd" value="3" />
+        <input type="hidden" id="muzCd" name="muzCd" value="000110" />
+        <input type="hidden" id="shopCd" name="shopCd" value="" />
+        <input type="hidden" id="mdate" name="mdate" value="" />
+        <input type="hidden" id="eTime" name="eTime" value="" />
+        <input type="hidden" id="eventCd" name="eventCd" value="202104" />
+        <input
+          type="hidden"
+          id="eventNm"
+          name="eventNm"
+          value="[기획전] 조선의 백자, 군자지향 君子志向"
+        />
+        <input type="hidden" id="tickCd" name="tickCd" value="" />
+        <input type="hidden" id="tickCnt" name="tickCnt" value="" />
+        <input type="hidden" id="totalPrice" name="totalPrice" value="" />
+        <input type="hidden" id="entGbn" name="entGbn" value="1" />
+        <input type="hidden" id="displayPeople" name="displayPeople" value="" />
+        <input type="hidden" id="cultureDayYn" name="cultureDayYn" value="Y" />
+        <input type="hidden" id="countryNo" name="countryNo" value="" />
+        <input type="hidden" id="countryCode" name="countryCode" value="" />
+        <input type="hidden" id="selectGbn" name="selectGbn" value="202104" />
+        <input
+          type="hidden"
+          id="limitedMuzCd"
+          name="limitedMuzCd"
+          value="000110"
+        />
+        <input
+          type="hidden"
+          id="limitedEventCd"
+          name="limitedEventCd"
+          value="202104"
+        />
+      </form>
+
+      <!--// 컨텐츠영역 끝 -->
+    </div>
+
+    <div>
+      <link
+        href="https://cdn2.devy.kr/2030/css/webgate.css?v=220422"
+        rel="stylesheet"
+      />
+      <div id="wg-ui-wrapper" style="display: none">
+        <div class="wg-ui-box">
+          <div class="wg-waiting-info">
+            <div class="wg-logo">
+              <img
+                src="https://cdn2.devy.kr/2030/img/logo.png?v=1"
+                alt="로고"
+              />
+            </div>
+            <!---->
+            <div class="wg-title">
+              <p class="wg-toptitle">페이지 이동 중</p>
+            </div>
+            <div class="wg-indicator">
+              <img
+                src="https://cdn2.devy.kr/2030/img/indicator-1.gif?v=1"
+                class="wg-indicator"
+              />
+            </div>
+            <div class="notice">
+              <span
+                >※ 페이지 새로고침, 여러 탭에서 동시접속 시도 시
+                <br class="is-mobile-only" />대기 불이익이 발생할 수
+                있습니다.</span
+              >
+              <br /><span
+                >※ Please do not refresh the page or attempt multiple
+                access.</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="_wg-ui-wrapper"
+      class="wg-ui is-wrapper"
+      style="display: none"
+    ></div>
+  </body>
+</html>

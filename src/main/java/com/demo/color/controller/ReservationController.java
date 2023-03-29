@@ -1,8 +1,11 @@
 package com.demo.color.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.demo.color.service.ReservService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,6 +30,9 @@ import lombok.extern.log4j.Log4j2;
 @Controller
 public class ReservationController {
 	
+	@Autowired
+	private ReservService service;
+	
 	@GetMapping("/reserv_main")
 	public void reserv_main() {
 		log.info("==== Make-on 메인 페이지====");
@@ -45,6 +51,12 @@ public class ReservationController {
 	@GetMapping("/reserv_online")
 	public void reserv_online() {
 		log.info("==== 예약 디테일 입력 페이지 : 온라인 전용 ====");
+		
+	}
+	
+	@GetMapping("/reserv_calan")
+	public void reserv_calan() {
+		log.info("==== demo calan ====");
 	}
 
 }
