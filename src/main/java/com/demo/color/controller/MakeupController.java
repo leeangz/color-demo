@@ -71,7 +71,7 @@ public class MakeupController {
 	}
 
 	@PostMapping("/makeup_send")
-	public String ResultSend(@RequestParam("result_img") String result_img, 
+	public String ResultSend(@RequestParam("result_img") String result_img, @RequestParam("rid") String rid,
 			@RequestParam("lip") String lip, @RequestParam("lip_pcode") String lip_pcode, @RequestParam("lip_opt") String lip_opt, 
 			@RequestParam("blush") String blush, @RequestParam("blush_pcode") String blush_pcode, @RequestParam("blush_opt") String blush_opt,
 			@RequestParam("face") String face, @RequestParam("face_pcode") String face_pcode, @RequestParam("face_opt") String face_opt, Model model) {
@@ -79,6 +79,7 @@ public class MakeupController {
 		log.info("======== 결과 DB로 넘어갔습니다 =======");
 		
 		ResultVO result = new ResultVO();
+		result.setRid(rid);
 		result.setResult_img(result_img);
 		result.setLip(lip);
 		result.setLip_pcode(lip_pcode);
