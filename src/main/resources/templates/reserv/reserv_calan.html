@@ -1,35 +1,105 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Calendar Example</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-	<table>
-		<tr>
-			<td align="center"><button onclick="prevCalendar()">Prev</button></td>
-			<td colspan="5" align="center" id="calendarTitle"></td>
-			<td align="center"><button onclick="nextCalendar()">Next</button></td>
-		</tr>
-		<tr>
-			<th style="color: red;">Sun</th>
-			<th>Mon</th>
-			<th>Tue</th>
-			<th>Wed</th>
-			<th>Thu</th>
-			<th>Fri</th>
-			<th style="color: blue;">Sat</th>
-		</tr>
-		<tbody id="calendarBody"></tbody>
-	</table>
+  <head>
+    <title>Calendar Example</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <div class="calendar">
+      <table>
+        <tr>
+          <td align="center"><button onclick="prevCalendar()">Prev</button></td>
+          <td colspan="5" align="center" id="calendarTitle"></td>
+          <td align="center"><button onclick="nextCalendar()">Next</button></td>
+        </tr>
+        <tr>
+          <th style="color: red">Sun</th>
+          <th>Mon</th>
+          <th>Tue</th>
+          <th>Wed</th>
+          <th>Thu</th>
+          <th>Fri</th>
+          <th style="color: blue">Sat</th>
+        </tr>
+        <tbody id="calendarBody"></tbody>
+      </table>
+    </div>
+    <div class="timetable" style="display: none">
+      <div class="accordion_cont" style="">
+        <!-- 추가  -->
+        <div class="time_wrap clickTime" id="time_body2">
+          <ul class="clickTime_left">
+            <li class="select_time">
+              <a href="#" title=""
+                ><span class="date" style="float: left">10:00</span
+                ><span style="float: right">예약 가능</span
+                ><input type="hidden" name="possibleCnt" value="0"
+              /></a>
+            </li>
+            <li class="select_time sold_out">
+              <a href="#" title=""
+                ><span class="date" style="float: left">11:00</span
+                ><span style="float: right">매진</span
+                ><input type="hidden" name="possibleCnt" value="0"
+              /></a>
+            </li>
+            <li class="select_time sold_out">
+              <a href="#" title=""
+                ><span class="date" style="float: left">12:00</span
+                ><span style="float: right">매진</span
+                ><input type="hidden" name="possibleCnt" value="0"
+              /></a>
+            </li>
+            <li class="select_time sold_out">
+              <a href="#" title=""
+                ><span class="date" style="float: left">13:00</span
+                ><span style="float: right">매진</span
+                ><input type="hidden" name="possibleCnt" value="0"
+              /></a>
+            </li>
+          </ul>
+          <ul class="clickTime_right">
+            <li class="select_time sold_out">
+              <a href="#" title=""
+                ><span class="date" style="float: left">14:00</span
+                ><span style="float: right">매진</span
+                ><input type="hidden" name="possibleCnt" value="0"
+              /></a>
+            </li>
+            <li class="select_time">
+              <a href="#" title=""
+                ><span class="date" style="float: left">15:00</span
+                ><span style="float: right">예약 가능</span
+                ><input type="hidden" name="possibleCnt" value="0"
+              /></a>
+            </li>
+            <li class="select_time sold_out">
+              <a href="#" title=""
+                ><span class="date" style="float: left">16:00</span
+                ><span style="float: right">매진</span
+                ><input type="hidden" name="possibleCnt" value="0"
+              /></a>
+            </li>
+            <li class="select_time sold_out">
+              <a href="#" title=""
+                ><span class="date" style="float: left">17:00</span
+                ><span style="float: right">매진</span
+                ><input type="hidden" name="possibleCnt" value="0"
+              /></a>
+            </li>
+          </ul>
+          <div style="clear: both"></div>
+        </div>
+      </div>
+    </div>
 
-<script>
-    let today = new Date();
-    let currentMonth = today.getMonth();
-    let currentYear = today.getFullYear();
+    <script>
+      let today = new Date();
+      let currentMonth = today.getMonth();
+      let currentYear = today.getFullYear();
 
-    function buildCalendar() {
+      function buildCalendar() {
         let firstDay = new Date(currentYear, currentMonth, 1);
         let lastDay = new Date(currentYear, currentMonth + 1, 0);
         let calendarTitle = document.getElementById("calendarTitle");
@@ -37,86 +107,120 @@
         let twoWeeksFromToday = new Date();
         twoWeeksFromToday.setDate(twoWeeksFromToday.getDate() + 14);
 
-        calendarTitle.innerHTML = currentYear + "년 " + (currentMonth + 1) + "월";
+        calendarTitle.innerHTML =
+          currentYear + "년 " + (currentMonth + 1) + "월";
 
         while (calendarBody.firstChild) {
-            calendarBody.removeChild(calendarBody.firstChild);
+          calendarBody.removeChild(calendarBody.firstChild);
         }
 
         let date = 1;
         for (let i = 0; i < 6; i++) {
-            let row = document.createElement("tr");
-            for (let j = 0; j < 7; j++) {
-                if (i === 0 && j < firstDay.getDay()) {
-                    let cell = document.createElement("td");
-                    let cellText = document.createTextNode("");
-                    cell.appendChild(cellText);
-                    row.appendChild(cell);
-                } else if (date > lastDay.getDate()) {
-                    break;
-                } else {
-                    let cell = document.createElement("td");
-                    let cellText = document.createTextNode(date);
-                    if (date === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
-                        cell.classList.add("current-day");
-                    }
-                    if (date > today.getDate() && date <= twoWeeksFromToday && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
-                        cell.classList.add("two-weeks");
-                    }
-                    cell.appendChild(cellText);
-                    row.appendChild(cell);
-                    date++;
-                }
+          let row = document.createElement("tr");
+          for (let j = 0; j < 7; j++) {
+            if (i === 0 && j < firstDay.getDay()) {
+              let cell = document.createElement("td");
+              let cellText = document.createTextNode("");
+              cell.appendChild(cellText);
+              row.appendChild(cell);
+            } else if (date > lastDay.getDate()) {
+              break;
+            } else {
+              let cell = document.createElement("td");
+              let cellText = document.createTextNode(date);
+              if (
+                date === today.getDate() &&
+                currentMonth === today.getMonth() &&
+                currentYear === today.getFullYear()
+              ) {
+                cell.classList.add("current-day");
+              }
+              if (
+                date > today.getDate() &&
+                date <= twoWeeksFromToday &&
+                currentMonth === today.getMonth() &&
+                currentYear === today.getFullYear()
+              ) {
+                cell.classList.add("two-weeks");
+              }
+              cell.addEventListener("click", showTimetable); // 클릭 이벤트 추가
+              cell.appendChild(cellText);
+              row.appendChild(cell);
+              date++;
             }
-            calendarBody.appendChild(row);
+          }
+          calendarBody.appendChild(row);
         }
-    }
+      }
 
-    function prevCalendar() {
-        currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
-        currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+      function prevCalendar() {
+        currentYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+        currentMonth = currentMonth === 0 ? 11 : currentMonth - 1;
         buildCalendar();
-    }
+      }
 
-    function nextCalendar() {
-        currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
+      function nextCalendar() {
+        currentYear = currentMonth === 11 ? currentYear + 1 : currentYear;
         currentMonth = (currentMonth + 1) % 12;
         let twoWeeksFromToday = new Date();
         twoWeeksFromToday.setDate(twoWeeksFromToday.getDate() + 14);
         buildCalendar();
-    }
+      }
+      let selectedYear, selectedMonth;
 
-    buildCalendar();
-</script>
-<style>
-table {
-	border-collapse: collapse;
-	width: 80%;
-	margin: auto;
-}
+      function showTimetable(event) {
+        let selectedDate = event.target.textContent;
+        selectedYear = currentYear;
+        selectedMonth = currentMonth + 1;
+        console.log(
+          `Selected Date: ${selectedYear}-${selectedMonth}-${selectedDate}`
+        );
+        // 선택된 날짜와 함께 year과 month도 출력합니다.
+        // 예: "Selected Date: 2023-4-3"
+        document.querySelector(".timetable").style.display = "block";
+      }
 
-td, th {
-	border: 1px solid black;
-	padding: 10px;
-	text-align: center;
-}
+      buildCalendar();
+    </script>
+    <script>
+      let calendarBody = document.getElementById("calendarBody");
+      let timetable = document.querySelector(".timetable");
 
-th {
-	background-color: lightgray;
-}
+      calendarBody.addEventListener("click", function (event) {
+        if (event.target.tagName === "TD") {
+          timetable.style.display = "block";
+        }
+      });
+    </script>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: auto;
+      }
 
-td:hover {
-	background-color: lightblue;
-}
+      td,
+      th {
+        border: 1px solid black;
+        padding: 10px;
+        text-align: center;
+      }
 
-.current-day {
-	background-color: beige;
-}
+      th {
+        background-color: lightgray;
+      }
 
-.two-weeks {
-  background-color: orange;
-}
-</style>
+      td:hover {
+        background-color: lightblue;
+      }
 
-</body>
+      .current-day {
+        background-color: beige;
+      }
+
+      .two-weeks {
+        background-color: orange;
+      }
+    </style>
+  </body>
 </html>
