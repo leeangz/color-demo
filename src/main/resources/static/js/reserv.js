@@ -74,15 +74,26 @@ function showTimetable(event) {
   let selectedDate = event.target.textContent;
   let selectedYear = currentYear;
   let selectedMonth = currentMonth + 1;
+  let selected = document.getElementById("selected");
+  if (selected) {
+    selected.remove();
+  }
   console.log(
     `Selected Date: ${selectedYear}-${selectedMonth}-${selectedDate}`
   );
+  let yearParent = document.querySelector(".accordion_cont1");
   let yearDiv = document.createElement("div");
-  let monthDiv = document.createElement("div");
+  let ymd = document.querySelector("#floatPC_daytime");
+  yearDiv.classList.add("selected");
+  yearDiv.id = "selected";
+  ymd.innerHTML =
+    "날짜 - " + selectedYear + "-" + selectedMonth + "-" + selectedDate;
   yearDiv.innerHTML =
     "Selected date: " + selectedYear + "-" + selectedMonth + "-" + selectedDate;
-  document.querySelector(".timetable").appendChild(yearDiv);
+  yearParent.appendChild(yearDiv);
+  //document.querySelector(".timetable").appendChild(yearDiv);
   document.querySelector(".timetable").style.display = "block";
+  document.querySelector(".calendartable").style.display = "none";
 }
 
 buildCalendar();
@@ -93,5 +104,45 @@ let timetable = document.querySelector(".timetable");
 calendarBody.addEventListener("click", function (event) {
   if (event.target.tagName === "TD") {
     timetable.style.display = "block";
+  }
+});
+
+let timetablebtn = document.querySelector(".timetable");
+let timeSelect = document.querySelector('[title="시간 선택"]');
+timeSelect.addEventListener("click", function () {
+  if (timetablebtn.style.display === "none") {
+    timetablebtn.style.display = "block";
+  } else {
+    timetablebtn.style.display = "none";
+    uploadpagebtn.style.display = "none";
+  }
+});
+
+const selectTimes = document.querySelectorAll(".select_time");
+
+selectTimes.forEach((selectTime) => {
+  selectTime.addEventListener("click", function () {
+    const dateText = this.querySelector(".date").textContent;
+    document.querySelector("#floatPC_time").textContent = "시간 - " + dateText;
+  });
+});
+
+let uploadpagebtn = document.querySelector(".uploadimage");
+let uploadSelect = document.querySelector('[title="사진 업로드"]');
+uploadSelect.addEventListener("click", function () {
+  if (uploadpagebtn.style.display === "none") {
+    uploadpagebtn.style.display = "block";
+  } else {
+    uploadpagebtn.style.display = "none";
+  }
+});
+
+let calendarpagebtn = document.querySelector(".calendartable");
+let calendarSelect = document.querySelector('[title="날짜 선택"]');
+calendarSelect.addEventListener("click", function () {
+  if (calendarpagebtn.style.display === "none") {
+    calendarpagebtn.style.display = "block";
+  } else {
+    calendarpagebtn.style.display = "none";
   }
 });

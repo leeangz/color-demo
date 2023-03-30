@@ -6,94 +6,193 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <div class="calendar">
-      <table>
-        <tr>
-          <td align="center"><button onclick="prevCalendar()">Prev</button></td>
-          <td colspan="5" align="center" id="calendarTitle"></td>
-          <td align="center"><button onclick="nextCalendar()">Next</button></td>
-        </tr>
-        <tr>
-          <th style="color: red">Sun</th>
-          <th>Mon</th>
-          <th>Tue</th>
-          <th>Wed</th>
-          <th>Thu</th>
-          <th>Fri</th>
-          <th style="color: blue">Sat</th>
-        </tr>
-        <tbody id="calendarBody"></tbody>
-      </table>
-    </div>
-    <div class="timetable" style="display: none">
-      <div class="accordion_cont" style="">
-        <!-- 추가  -->
-        <div class="time_wrap clickTime" id="time_body2">
-          <ul class="clickTime_left">
-            <li class="select_time">
-              <a href="#" title=""
-                ><span class="date" style="float: left">10:00</span
-                ><span style="float: right">예약 가능</span
-                ><input type="hidden" name="possibleCnt" value="0"
-              /></a>
-            </li>
-            <li class="select_time sold_out">
-              <a href="#" title=""
-                ><span class="date" style="float: left">11:00</span
-                ><span style="float: right">매진</span
-                ><input type="hidden" name="possibleCnt" value="0"
-              /></a>
-            </li>
-            <li class="select_time sold_out">
-              <a href="#" title=""
-                ><span class="date" style="float: left">12:00</span
-                ><span style="float: right">매진</span
-                ><input type="hidden" name="possibleCnt" value="0"
-              /></a>
-            </li>
-            <li class="select_time sold_out">
-              <a href="#" title=""
-                ><span class="date" style="float: left">13:00</span
-                ><span style="float: right">매진</span
-                ><input type="hidden" name="possibleCnt" value="0"
-              /></a>
-            </li>
+    <!-- <progress id="progress" value="50" min="0" max="100"></progress> -->
+    <div class="total">
+      <div class="float_inner">
+        <div class="exhib_info">
+          <div class="exhib_tit">
+            <div class="makeup-main">
+              <img src="https://necteltechnologies.com/site/wp-content/uploads/it-consulting.jpeg">
+            </div>
+            <ul class="exhib_list" id="floatPC_layer" style="text-align: center">
+              <span style="">온라인 프로그램</span>
+            </ul>
+          </div>
+          <ul class="list_info">
+            <li id="floatPC_daytime">날짜 -</li>
+            <li id="floatPC_time">시간 -</li>
           </ul>
-          <ul class="clickTime_right">
-            <li class="select_time sold_out">
-              <a href="#" title=""
-                ><span class="date" style="float: left">14:00</span
-                ><span style="float: right">매진</span
-                ><input type="hidden" name="possibleCnt" value="0"
-              /></a>
-            </li>
-            <li class="select_time">
-              <a href="#" title=""
-                ><span class="date" style="float: left">15:00</span
-                ><span style="float: right">예약 가능</span
-                ><input type="hidden" name="possibleCnt" value="0"
-              /></a>
-            </li>
-            <li class="select_time sold_out">
-              <a href="#" title=""
-                ><span class="date" style="float: left">16:00</span
-                ><span style="float: right">매진</span
-                ><input type="hidden" name="possibleCnt" value="0"
-              /></a>
-            </li>
-            <li class="select_time sold_out">
-              <a href="#" title=""
-                ><span class="date" style="float: left">17:00</span
-                ><span style="float: right">매진</span
-                ><input type="hidden" name="possibleCnt" value="0"
-              /></a>
-            </li>
-          </ul>
-          <div style="clear: both"></div>
+          <div class="applybtn">
+            <span class="reservi">예약하기</span>
+          </div>
         </div>
       </div>
+    <div class="mainbody">
+      <!-- 달력 -->
+      <div class="tit" title="날짜 선택" id="step1-head" tabindex="0">
+        <h3 class="g-title-1">날짜 선택</h3>
+      </div>
+      <div class="calendartable">
+        <div class="accordion_cont">
+          <div class="calendargrid">
+            <div class="calendar">
+              <table>
+                <tr>
+                  <td align="center">
+                    <button onclick="prevCalendar()">Prev</button>
+                  </td>
+                  <td colspan="5" align="center" id="calendarTitle"></td>
+                  <td align="center">
+                    <button onclick="nextCalendar()">Next</button>
+                  </td>
+                </tr>
+                <tr>
+                  <th style="color: red">Sun</th>
+                  <th>Mon</th>
+                  <th>Tue</th>
+                  <th>Wed</th>
+                  <th>Thu</th>
+                  <th>Fri</th>
+                  <th style="color: blue">Sat</th>
+                </tr>
+                <tbody id="calendarBody"></tbody>
+              </table>
+            </div>
+            <dl class="calendar_info" style="margin-left: 20px">
+              <dt>예약 안내</dt>
+              <dd>
+                <p>
+                  온라인 예약은 프로그램 한달 전부터 가능하며, 상담은 6개월이
+                  지나야 재예약이 가능합니다.
+                </p>
+                <p>
+                  원활한 상담을 위해 반드시 예약 사항을 지켜주시기 바라며,
+                  상담이 어려우시면 다른 고객을 위해 반드시 예약를 취소해 주시기
+                  바랍니다.
+                </p>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+        <!-- /달력 -->
+        <div class="tit" title="시간 선택" id="step1-head" tabindex="0">
+          <h3 class="g-title-1">시간 선택</h3>
+        </div>
+        <!-- 시간대-->
+        <div class="timetable" style="display: none">
+          <div class="accordion_cont1" style="">
+            <div class="time_wrap clickTime" id="time_body2">
+              <ul class="clickTime_left">
+                <li class="select_time">
+                  <a href="#" title=""
+                    ><span class="date" style="float: left">10:00</span
+                    ><span style="float: right">예약 가능</span
+                    ><input type="hidden" name="possibleCnt" value="0"
+                  /></a>
+                </li>
+                <li class="select_time sold_out">
+                  <a href="#" title=""
+                    ><span class="date" style="float: left">11:00</span
+                    ><span style="float: right">매진</span
+                    ><input type="hidden" name="possibleCnt" value="0"
+                  /></a>
+                </li>
+                <li class="select_time sold_out">
+                  <a href="#" title=""
+                    ><span class="date" style="float: left">12:00</span
+                    ><span style="float: right">매진</span
+                    ><input type="hidden" name="possibleCnt" value="0"
+                  /></a>
+                </li>
+                <li class="select_time sold_out">
+                  <a href="#" title=""
+                    ><span class="date" style="float: left">13:00</span
+                    ><span style="float: right">매진</span
+                    ><input type="hidden" name="possibleCnt" value="0"
+                  /></a>
+                </li>
+              </ul>
+              <ul class="clickTime_right">
+                <li class="select_time sold_out">
+                  <a href="#" title=""
+                    ><span class="date" style="float: left">14:00</span
+                    ><span style="float: right">매진</span
+                    ><input type="hidden" name="possibleCnt" value="0"
+                  /></a>
+                </li>
+                <li class="select_time">
+                  <a href="#" title=""
+                    ><span class="date" style="float: left">15:00</span
+                    ><span style="float: right">예약 가능</span
+                    ><input type="hidden" name="possibleCnt" value="0"
+                  /></a>
+                </li>
+                <li class="select_time sold_out">
+                  <a href="#" title=""
+                    ><span class="date" style="float: left">16:00</span
+                    ><span style="float: right">매진</span
+                    ><input type="hidden" name="possibleCnt" value="0"
+                  /></a>
+                </li>
+                <li class="select_time sold_out">
+                  <a href="#" title=""
+                    ><span class="date" style="float: left">17:00</span
+                    ><span style="float: right">매진</span
+                    ><input type="hidden" name="possibleCnt" value="0"
+                  /></a>
+                </li>
+              </ul>
+              <div style="clear: both"></div>
+            </div>
+          </div>
+        </div>
+      
+      <!-- /시간대-->
+      <!-- 사진 업로드 -->
+      <div class="tit" title="사진 업로드" id="step1-head" tabindex="0">
+        <h3 class="g-title-1">사진 업로드</h3>
+      </div>
+      <div class="uploadimage" style="display: none;">
+        <div class="accordion_cont">
+          <div class="uploadbox">
+            <div
+              class="faceupload"
+              style="
+                width: 300px;
+                height: 400px;
+                background: darkgray;
+                float: left;
+              "
+            ></div>
+            <div class="rightbox" style="float: right">
+              <div class="g_box" style="margin: 0; float: right">
+                <dl>
+                  <dt>GUIDE</dt>
+                  <dd>정확한 상담을 위해 다음을 지켜주세요<br /></dd>
+                  <dd>1. 밝은 곳에서 찍은 사진</dd>
+                  <dd>2. 화장하지 않은 상태의 사진</dd>
+                  <dd>3. 눈 코 입을 가리지 않은 얼굴형이 드러나는 사진</dd>
+                  <dd>사진은 상담 이외의 목적으로 사용되지 않습니다.</dd>
+                  <dd>사진은 6개월 보관 후 폐기됩니다.</dd>
+                </dl>
+              </div>
+              <div class="makeupbtn1">
+                <div class="btn_green">
+                  <p>등록하기</p>
+                </div>
+                <div class="btn_gray">
+                  <p>삭제</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /사진 업로드 -->
     </div>
-
+  </div>
+</div>
     <script>
       let today = new Date();
       let currentMonth = today.getMonth();
@@ -179,8 +278,16 @@
         console.log(
           `Selected Date: ${selectedYear}-${selectedMonth}-${selectedDate}`
         );
+        let yearParent = document.querySelector(".accordion_cont1");
         let yearDiv = document.createElement("div");
+        let ymd = document.querySelector("#floatPC_daytime");
+        yearDiv.classList.add("selected");
         yearDiv.id = "selected";
+        ymd.innerHTML = "날짜 - " + selectedYear +
+        "-" +
+        selectedMonth +
+        "-" +
+        selectedDate;
         yearDiv.innerHTML =
           "Selected date: " +
           selectedYear +
@@ -188,8 +295,10 @@
           selectedMonth +
           "-" +
           selectedDate;
-        document.querySelector(".timetable").appendChild(yearDiv);
+        yearParent.appendChild(yearDiv);
+        //document.querySelector(".timetable").appendChild(yearDiv);
         document.querySelector(".timetable").style.display = "block";
+        document.querySelector(".calendartable").style.display = "none";
       }
 
       buildCalendar();
@@ -203,8 +312,119 @@
           timetable.style.display = "block";
         }
       });
+
+      let timetablebtn = document.querySelector(".timetable");
+      let timeSelect = document.querySelector('[title="시간 선택"]');
+      timeSelect.addEventListener("click", function () {
+        if (timetablebtn.style.display === "none") {
+          timetablebtn.style.display = "block";
+        } else {
+          timetablebtn.style.display = "none";
+          uploadpagebtn.style.display = "none";
+        }
+      });
+
+const selectTimes = document.querySelectorAll('.select_time');
+
+selectTimes.forEach(selectTime => {
+  selectTime.addEventListener('click', function() {
+    const dateText = this.querySelector('.date').textContent;
+    document.querySelector('#floatPC_time').textContent = "시간 - " + dateText;
+  });
+});
+
+    let uploadpagebtn = document.querySelector(".uploadimage");
+      let uploadSelect = document.querySelector('[title="사진 업로드"]');
+      uploadSelect.addEventListener("click", function () {
+        if (uploadpagebtn.style.display === "none") {
+          uploadpagebtn.style.display = "block";
+        } else {
+          uploadpagebtn.style.display = "none";
+        }
+      });
+
+      let calendarpagebtn = document.querySelector(".calendartable");
+      let calendarSelect = document.querySelector('[title="날짜 선택"]');
+      calendarSelect.addEventListener("click", function () {
+        if (calendarpagebtn.style.display === "none") {
+          calendarpagebtn.style.display = "block";
+        } else {
+          calendarpagebtn.style.display = "none";
+        }
+      });
+
+    </script> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $("li.select_time").on("click", function() {
+        $(".uploadimage").css("display", "block");
+        $(".timetable").css("display", "none");
+      });
     </script>
     <style>
+      span.reservi {
+        float: right;
+        color: white;
+        background: gainsboro;
+        width: 300px;
+        text-align: center;
+        height: 70px;
+        line-height: 70px;
+        font-size: larger;
+    }
+      ul#floatPC_layer {
+        text-align: center;
+        padding: 10px;
+        color: #767676;
+    }
+      .float_inner {
+        margin: 0 90px;
+        box-shadow: 10px 10px 50px rgba(0,0,0,.2);
+        width: 300px;
+        color: #767676;
+        height: 460px;
+    }
+    ul.list_info {
+      padding: 0 20px;
+      box-sizing: border-box;
+  }
+    .exhib_tit {
+      position: relative;
+      border-bottom: 1px dashed #000;
+      box-sizing: border-box;
+  }
+  .mainbody {
+    font-size: 12px;
+    max-width: 1000px;
+    min-width: 1000px;
+}
+  li#floatPC_daytime {
+    padding: 15px 0;
+    font-size: 13px;
+    color: #000;
+    line-height: 1.3em;
+    list-style: none;
+}
+li#floatPC_time {
+  list-style: none;
+  padding: 15px 0;
+  border-top: 1px solid #e5e5e5;
+  font-size: 13px;
+  color: #000;
+  line-height: 1.3em;
+}
+      .total {
+        display: flex;
+    }
+      .makeup-main img {
+        text-align: center;
+        filter: brightness(0.5);
+        opacity: 0.9;
+        position: relative;
+        height: 250px;
+        width: 300px;
+        object-fit: cover;
+    }
       table {
         border-collapse: collapse;
         width: 80%;
@@ -213,13 +433,9 @@
 
       td,
       th {
-        border: 1px solid black;
+        border: 4px solid white;
         padding: 10px;
         text-align: center;
-      }
-
-      th {
-        background-color: lightgray;
       }
 
       td:hover {
@@ -237,6 +453,16 @@
         padding: 50px 45px;
         background: #f3f3f3;
         box-sizing: border-box;
+        margin: 0;
+      }
+      .accordion_cont1 {
+        padding: 50px 45px;
+        background: #f3f3f3;
+        box-sizing: border-box;
+        margin: 0;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
       }
       div#time_body2 {
         line-height: 100%;
@@ -246,15 +472,13 @@
         overflow: hidden;
         margin-bottom: 10px;
         float: left;
-        width: calc(42% + 2px);
-        margin-left: 1px;
         padding-right: 5%;
         display: inline-block;
         border-right: 1px solid #e5e5e5;
+        padding-left: 0;
       }
       ul.clickTime_right {
         float: right;
-        width: calc(43% + 1px);
         margin-left: -1px;
         padding-left: 5%;
         display: inline-block;
@@ -281,8 +505,85 @@
         font-weight: 500;
         color: black;
       }
-      .timetable {
-        margin: 0 90px;
+      .time_wrap.clickTime {
+        display: grid;
+        align-items: flex-start;
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .time_wrap li.sold_out a span {
+        display: block;
+        color: #c5c5c5;
+        font-weight: 500;
+        cursor: not-allowed;
+      }
+      .g_box dt {
+        position: relative;
+        margin-bottom: 10px;
+        padding-left: 9px;
+        font-size: 14px;
+        color: #000;
+        font-weight: 500;
+      }
+      .makeupbtn1 {
+        text-align: center;
+        margin: 20px 0;
+      }
+      .btn_green {
+        float: right;
+        color: white;
+        background: #45675b;
+        width: 120px;
+      }
+      .btn_gray {
+        float: right;
+        color: white;
+        background: slategray;
+        margin-right: 30px;
+        width: 120px;
+      }
+      dl {
+        padding: 20px;
+        border: 1px dashed #e5e5e5;
+        background: #fff;
+        box-sizing: border-box;
+        margin-bottom: 85px;
+      }
+      dd {
+        margin: 10px;
+      }
+      .uploadbox {
+        grid-template-columns: repeat(2, 1fr);
+        display: grid;
+        place-items: center;
+      }
+      h3.g-title-1 {
+        background-color: #8a9591ba;
+        margin: 0;
+        padding: 14px 20px;
+        color: white;
+        font-size: initial;
+      }
+      .calendargrid {
+        grid-template-columns: repeat(2, 1fr);
+        display: grid;
+        place-items: center;
+      }
+      #progress {
+        appearance: none;
+        margin: 10px 90px;
+        width: -webkit-fill-available;
+      }
+      #progress::-webkit-progress-bar {
+        background: #f0f0f0;
+        border-radius: 10px;
+        box-shadow: inset 3px 3px 10px #ccc;
+      }
+      #progress::-webkit-progress-value {
+        border-radius: 10px;
+        background: #1d976c;
+        background: -webkit-linear-gradient(to right, #93f9b9, #1d976c);
+        background: linear-gradient(to right, #93f9b9, #1d976c);
       }
     </style>
   </body>
