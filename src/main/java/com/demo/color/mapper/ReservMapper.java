@@ -1,7 +1,6 @@
 package com.demo.color.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import com.demo.color.domain.ReservVO;
 
@@ -21,7 +20,7 @@ import com.demo.color.domain.ReservVO;
 @Mapper
 public interface ReservMapper {
 
-	public ReservVO reserv(@Param("rimg") String rimg, @Param("rdate") String rdate, @Param("mid") String mid);
+	public void reserv(ReservVO vo);
 
 	public int CountDate(String rdate);
 	

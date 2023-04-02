@@ -26,7 +26,7 @@
 			var str = "";
 			for (var i = 0; i < arr.length; i++) {
 				str += "<div>";
-				str += "<img src='/display?fileName=" + arr[i].thumbnailURL
+				str += "<img src='/reserv/display?fileName=" + arr[i].thumbnailURL
 						+ "'>";
 				str += "<button class='removeBtn' data-name='"
            str +=  arr[i].imageURL + "'>REMOVE</button>"
@@ -46,7 +46,7 @@
 
 			//upload ajax
 			$.ajax({
-				url : '/uploadAjax',
+				url : '/reserv/upload.do',
 				processData : false,
 				contentType : false,
 				data : formData,
@@ -70,7 +70,7 @@
 			var targetDiv = $(this).closest("div");
 			console.log(fileName);
 			//파일 삭제 호출
-			$.post('/removeFile', {
+			$.post('/reserv/removeFile', {
 				fileName : fileName
 			}, function(result) {
 				console.log(result);

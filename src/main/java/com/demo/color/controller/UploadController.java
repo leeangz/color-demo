@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,8 +27,9 @@ import com.demo.color.dto.UploadResultDTO;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
 
-@RestController
 @Log4j2
+@RestController
+@RequestMapping("/reserv")
 public class UploadController {
 
 	@Value("${com.demo.upload.path}")
@@ -44,7 +46,7 @@ public class UploadController {
 		return folderPath;
 	}
 
-	@PostMapping("/uploadAjax")
+	@PostMapping("/upload.do")
 	public ResponseEntity<List<UploadResultDTO>> uploadFile(MultipartFile[] uploadFiles) {
 
 		List<UploadResultDTO> resultDTOList = new ArrayList<>();
@@ -68,8 +70,7 @@ public class UploadController {
 				String thumnailSaveName = uploadPath + File.separator + folderPath + File.separator + "s_" + uuid + "_"
 						+ originalName;
 				File thumbailFile = new File(thumnailSaveName);
-				// 섬네일 파일 생성 100 X 100 생성 input,output, 가로, 세로
-				Thumbnailator.createThumbnail(savePath.toFile(), thumbailFile, 100, 100);
+				Thumbnailator.createThumbnail(savePath.toFile(), thumbailFile, 300, 400);
 				resultDTOList.add(new UploadResultDTO(originalName, uuid, folderPath));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -78,7 +79,7 @@ public class UploadController {
 		log.info(resultDTOList);
 		return new ResponseEntity<>(resultDTOList, HttpStatus.OK);
 	}
-
+	
 	@GetMapping("/display")
 	public ResponseEntity<byte[]> getFile(String fileName) {
 		ResponseEntity<byte[]> result = null;
@@ -87,7 +88,6 @@ public class UploadController {
 			File file = new File(uploadPath + File.separator + srcFileName);
 			HttpHeaders headers = new HttpHeaders();
 			headers.add("Content-Type", Files.probeContentType(file.toPath()));
-			//
 			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -95,4 +95,25 @@ public class UploadController {
 		} 
 		return result;
 	}
+	
+	@PostMapping("/removeFile")
+	   public ResponseEntity<Boolean> removeFile(String fileName){
+	       String srcFileName= null;
+	       log.info("removeFile-----");
+	      
+	       try{
+	           srcFileName = URLDecoder.decode(fileName, "UTF-8");
+	           log.info("srcFileName: "+srcFileName);
+	           File file = new File(uploadPath + File.separator+ srcFileName);
+	           boolean result = file.delete();
+	           File thumnailfile =
+	                   new File(file.getParent(), "s_" + file.getName());
+	           result = thumnailfile.delete();
+	           return new ResponseEntity<>(result, HttpStatus.OK);
+	       }catch (Exception e){
+	           e.printStackTrace();
+	           return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+	       }      
+	   }
+
 }

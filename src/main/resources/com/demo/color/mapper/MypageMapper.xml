@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.color.mapper.MypageMapper">
+
+<!-- mname으로 예약내역 가져오기 -->
+
+<!-- rid로 예약 결과 가져와서 result 보여주기 근데 가격도 보여줘야함 -->
+
+<!-- 장바구니로 바로 쏴줘야함 -->
+
+</mapper>
