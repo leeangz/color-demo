@@ -163,6 +163,14 @@
             <!-- leftmenu -->
             <ul class="leftmenu">
               <li class="">
+                <a class="not">Make-On</a>
+                <ul>
+                  <li class="">
+                    <a>예약 관리</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="">
                 <a class="not">주문현황</a>
                 <ul>
                   <li class="">
@@ -177,20 +185,6 @@
                       href="/front/mpa/selectOrdCnclCrst.thd"
                       onclick="javascript:GA_Event('PC_마이페이지', 'LNB', '주문현황_취소/반품/교환');"
                       >취소/반품/교환</a
-                    >
-                  </li>
-                  <li class="">
-                    <a
-                      href="/front/mpa/selectTxinTabMainPage.thd"
-                      onclick="javascript:GA_Event('PC_마이페이지', 'LNB', '주문현황_영수증/세금계산서');"
-                      >영수증/세금계산서</a
-                    >
-                  </li>
-                  <li class="">
-                    <a
-                      href="/front/mpa/selectStorePickMng.thd"
-                      onclick="javascript:GA_Event('PC_마이페이지', 'LNB', '주문현황_스토어픽 관리');"
-                      >스토어픽 관리</a
                     >
                   </li>
                 </ul>
@@ -216,16 +210,14 @@
 
           <!-- content -->
           <div class="content">
-            <div class="myhyundai-head">
-              <!-- head-summary contents -->
-
-              <!-- // head-summary contents -->
-            </div>
-
-            <div class="myhyundai-main">
+            <div class="myhyundai-head"></div>
+            <div class="myhyundai-main" style="margin: 40px 0">
               <h3>Make-On 예약 관리</h3>
             </div>
             <!-- cart-list -->
+            <div class="myhyundai-main" style="margin: 40px 0">
+              <h2>예약 결과</h2>
+            </div>
             <div class="cart-list">
               <h4 class="blind">주문/배송 내역</h4>
               <!-- table-wrap -->
@@ -234,7 +226,7 @@
                   <caption></caption>
                   <colgroup>
                     <col style="width: 130px" />
-                    <col style="width: *" />
+                    <col style="width: 100px" />
                     <col style="width: 120px" />
                     <col style="width: 120px" />
                     <col style="width: 100px" />
@@ -249,14 +241,119 @@
                     </tr>
                   </thead>
                   <tbody>
+                    <!--
                     <tr>
                       <td height="120" colspan="5">예약 내역이 없습니다.</td>
+                    </tr>
+                    -->
+
+                    <tr th:each="done : ${done}">
+                      <td class="valign-top" rowspan="1">
+                        <div class="od-info">
+                          <p
+                            class="strong text-point2"
+                            th:text="${done.rid}"
+                          ></p>
+                          <p class="where">온라인</p>
+                        </div>
+                      </td>
+
+                      <td class="price-info" style="">
+                        <div
+                          class="tot-price"
+                          th:text="${#strings.substring(done.rdate, 0, 10)}"
+                        ></div>
+                      </td>
+                      <td class="price-info">
+                        <div
+                          class="tot-price"
+                          th:text="${#strings.substring(done.rdate, 11, 16)}"
+                        ></div>
+                      </td>
+                      <td class="shipping">
+                        <div class="order-status">상담 완료</div>
+                      </td>
+                      <td class="ctrl">
+                        <p class="v-btn-wrap">
+                          <a
+                            href="/front/mpa/selectOrdPTCPup.thd?ordNo=23040200870697"
+                            onclick="javascript:GA_Event('PC_마이페이지', '최근_주문_배송내역', '상세내역');"
+                            class="btn color4 size1"
+                            >결과 확인</a
+                          >
+                        </p>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
             <!-- //cart-list -->
+            <div class="myhyundai-main" style="margin: 40px 0">
+              <h2>예약 진행중</h2>
+            </div>
+            <div class="table-wrap coltype cart no-border-top">
+              <table>
+                <caption></caption>
+                <colgroup>
+                  <col style="width: 130px" />
+                  <col style="width: 100px" />
+                  <col style="width: 120px" />
+                  <col style="width: 120px" />
+                  <col style="width: 100px" />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">예약번호</th>
+                    <th scope="col" style="width: 100px">날짜</th>
+                    <th scope="col" style="">시간</th>
+                    <th scope="col" style="">예약상태</th>
+                    <th scope="col">입장</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!--
+                    <tr>
+                      <td height="120" colspan="5">예약 내역이 없습니다.</td>
+                    </tr>
+                    -->
+
+                  <tr th:each="ready : ${ready}">
+                    <td class="valign-top" rowspan="1">
+                      <div class="od-info">
+                        <p
+                          class="strong text-point2"
+                          th:text="${ready.rid}"
+                        ></p>
+                        <p class="where">온라인</p>
+                      </div>
+                    </td>
+
+                    <td class="price-info" style="">
+                      <div
+                        class="tot-price"
+                        th:text="${#strings.substring(ready.rdate, 0, 10)}"
+                      ></div>
+                    </td>
+                    <td class="price-info">
+                      <div
+                        class="tot-price"
+                        th:text="${#strings.substring(ready.rdate, 11, 16)}"
+                      ></div>
+                    </td>
+                    <td class="shipping">
+                      <div class="order-status">상담 전</div>
+                    </td>
+                    <td class="ctrl">
+                      <p class="v-btn-wrap">
+                        <a>입장 대기</a>
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- //입장-->
           </div>
           <!-- //content -->
         </div>

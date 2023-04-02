@@ -1,5 +1,7 @@
 package com.demo.color.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,11 +60,6 @@ public class ReservationController {
 		
 	}
 	
-	@GetMapping("/reserv_calan")
-	public void reserv_calan() {
-		log.info("==== demo calan ====");
-	}
-	
 	@GetMapping("/uploadEx")
 	public void uploadEx() {
 		log.info("==== 파일 업로드 샘플 페이지 ====");
@@ -70,7 +67,7 @@ public class ReservationController {
 	
 	@PostMapping("/reserv.do")
 	public String reservSend(@RequestParam("rimg") String rimg, @RequestParam("rdate") String rdate, @RequestParam("mid") String mid) {
-		
+
 		log.info("==== 예약 DB 처리중 ====");
 		ReservVO vo = new ReservVO();
 		vo.setMid(mid);
@@ -79,7 +76,7 @@ public class ReservationController {
 		
 		service.reserv(vo);
 		
-		return ("/makeup/makeup_finish");
+		return "redirect:/mypage/mypage_reserv";
 	}
 	
 	// 날짜 별 예약이 풀인지 아닌지 체크

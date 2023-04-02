@@ -4,10 +4,19 @@
 
 <mapper namespace="com.demo.color.mapper.MypageMapper">
 
-<!-- mname으로 예약내역 가져오기 -->
+	<!-- 끝난 예약 보여주기 -->
+	<select id="getReservdone"
+		resultType="com.demo.color.domain.ReservVO">
+		select * from reservation where mid=#{mid} and rcheck=1
+	</select>
 
-<!-- rid로 예약 결과 가져와서 result 보여주기 근데 가격도 보여줘야함 -->
+	<!-- 안끝난 예약 보여주기 -->
+	<select id="getReservReady"
+		resultType="com.demo.color.domain.ReservVO">
+		select * from reservation where mid=#{mid} and rcheck=0
+	</select>
 
-<!-- 장바구니로 바로 쏴줘야함 -->
+	<!-- rid로 예약 결과 가져와서 result 보여주기 근데 가격도 보여줘야함 -->
+	<!-- 장바구니로 바로 쏴줘야함 -->
 
 </mapper>
