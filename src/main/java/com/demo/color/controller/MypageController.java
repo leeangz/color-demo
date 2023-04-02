@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.demo.color.domain.BlushVO;
+import com.demo.color.domain.FoundationVO;
+import com.demo.color.domain.LipVO;
 import com.demo.color.domain.ReservVO;
+import com.demo.color.domain.ResultVO;
 import com.demo.color.service.MypageService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,7 @@ import lombok.extern.log4j.Log4j2;
  * ----------      --------    ---------------------------
  * 2023. 4. 1.     이세아       create
  * 2023. 4. 1.     이세아       마이페이지 controller - makeon 예약관리
+ * 2023. 4. 2.     이세아       마이페이지 controller - makeon 예약결과
  * </pre>
  */
 
@@ -54,6 +59,27 @@ public class MypageController {
 		List<ReservVO> ready = service.getReservReady("angz");
 		model.addAttribute("done", done);
 		model.addAttribute("ready", ready);
+	}
+	
+	@GetMapping("/mypage_result")
+	public void mypageresult(@RequestParam("rid") String rid, Model model) {
+		log.info("==== 마이페이지 예약 결과 창 ====");
+		ReservVO info = service.getReservInfo(rid);
+		ResultVO result = service.getResultInfo(rid);
+		
+		String lipopt = result.getLip_opt();
+		String blushopt = result.getBlush_opt();
+		String faceopt = result.getFace_opt();
+		
+		LipVO lipresult = service.getLipResult(lipopt);
+		BlushVO blushresult = service.getBlushResult(blushopt);
+		FoundationVO faceresult = service.getFaceResult(faceopt);
+		
+		model.addAttribute("info", info);
+		model.addAttribute("result", result);
+		model.addAttribute("lipresult", lipresult);
+		model.addAttribute("blushresult", blushresult);
+		model.addAttribute("faceresult", faceresult);	
 	}
 	
 }

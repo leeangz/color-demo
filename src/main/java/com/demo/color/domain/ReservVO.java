@@ -1,7 +1,5 @@
 package com.demo.color.domain;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
+        
 <mapper namespace="com.demo.color.mapper.MypageMapper">
 
 	<!-- 끝난 예약 보여주기 -->
@@ -16,7 +16,43 @@
 		select * from reservation where mid=#{mid} and rcheck=0
 	</select>
 
-	<!-- rid로 예약 결과 가져와서 result 보여주기 근데 가격도 보여줘야함 -->
-	<!-- 장바구니로 바로 쏴줘야함 -->
-
+	<!-- rid로 예약 결과 가져와서 result -->
+	<select id="getLipResult"
+		resultType="com.demo.color.domain.LipVO">
+		select a.pcode, pname, pprice, dept2no, optcolor, optname,
+		iloc, itype
+		from product a, poption b, img c
+		where a.pcode=b.pcode and
+		a.pcode=c.pcode and dept2no=24
+		and itype='thumb' and iloc like '%0' and
+		optname=#{optname}
+	</select>
+	<select id="getBlushResult"
+		resultType="com.demo.color.domain.BlushVO">
+		select a.pcode, pname, pprice, dept2no, optcolor, optname,
+		iloc, itype
+		from product a, poption b, img c
+		where a.pcode=b.pcode and
+		a.pcode=c.pcode and dept2no=24
+		and itype='thumb' and iloc like '%0' and
+		optname=#{optname}
+	</select>
+	<select id="getFaceResult"
+		resultType="com.demo.color.domain.FoundationVO">
+		select a.pcode, pname, pprice, dept2no, optcolor, optname,
+		iloc, itype
+		from product a, poption b, img c
+		where a.pcode=b.pcode and
+		a.pcode=c.pcode and dept2no=24
+		and itype='thumb' and iloc like '%0' and
+		optname=#{optname}
+	</select>
+	<select id="getReservInfo"
+		resultType="com.demo.color.domain.ReservVO">
+		select * from reservation where rid=#{rid}
+	</select>
+	<select id="getResultInfo"
+		resultType="com.demo.color.domain.ResultVO">
+		select * from result where rid=#{rid}
+	</select>
 </mapper>
