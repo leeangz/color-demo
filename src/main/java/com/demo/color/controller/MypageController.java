@@ -62,18 +62,34 @@ public class MypageController {
 	}
 	
 	@GetMapping("/mypage_result")
+	// memberVO 정보 가져와야함
 	public void mypageresult(@RequestParam("rid") String rid, Model model) {
 		log.info("==== 마이페이지 예약 결과 창 ====");
 		ReservVO info = service.getReservInfo(rid);
 		ResultVO result = service.getResultInfo(rid);
+		log.info(info);
+		log.info(result);
 		
+		LipVO lipresult = new LipVO();
+		BlushVO blushresult = new BlushVO();
+		FoundationVO faceresult = new FoundationVO();
+		
+		log.info("입술 옵션 : " +  result.getLip_opt());
 		String lipopt = result.getLip_opt();
+		lipresult = service.getLipResult(lipopt);
+		log.info("가져온 입술 정보 : " + lipresult);
+	    
+	    log.info("블러쉬 옵션 : " +  result.getBlush_opt());
 		String blushopt = result.getBlush_opt();
-		String faceopt = result.getFace_opt();
+		blushresult = service.getBlushResult(blushopt);
+		log.info("가져온 블러쉬 정보 : " + blushresult);
 		
-		LipVO lipresult = service.getLipResult(lipopt);
-		BlushVO blushresult = service.getBlushResult(blushopt);
-		FoundationVO faceresult = service.getFaceResult(faceopt);
+		log.info("파운데이션 옵션 : " +  result.getFace_opt());
+		log.info("파운데이션 상품코드 : " +  result.getFace_pcode());		
+		String faceopt = result.getFace_opt();
+		String facepcode = result.getFace_pcode();
+		faceresult = service.getFaceResult(faceopt, facepcode);
+		log.info("가져온 파운데이션 정보 : " + faceresult);
 		
 		model.addAttribute("info", info);
 		model.addAttribute("result", result);

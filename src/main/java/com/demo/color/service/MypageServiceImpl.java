@@ -44,8 +44,8 @@ public class MypageServiceImpl implements MypageService{
 	}
 
 	@Override
-	public FoundationVO getFaceResult(String optname) {
-		return mapper.getFaceResult(optname);
+	public FoundationVO getFaceResult(String optname, String pcode) {
+		return mapper.getFaceResult(optname, pcode);
 	}
 
 	@Override

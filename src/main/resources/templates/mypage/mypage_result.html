@@ -1,4 +1,7 @@
-<html class="">
+<html
+  xmlns:sec="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+>
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -173,7 +176,7 @@
                 <a class="not">Make-On</a>
                 <ul>
                   <li class="">
-                    <a>예약 관리</a>
+                    <a th:onclick="|location.href='@{/mypage/mypage_reserv}'|">예약 관리</a>
                   </li>
                 </ul>
               </li>
@@ -319,7 +322,7 @@
                       <div class="faceupload" style="float: left">
                         <img
                           class="face"
-                          src="../../static/img/shin.jpg"
+                          th:src="${reserv.rimg}"
                           style="
                             max-width: 150px;
                             margin: 0 20 20 20;
@@ -330,7 +333,7 @@
                       <div class="faceupload" style="float: left">
                         <img
                           class="face"
-                          src="https://s3.ap-northeast-2.amazonaws.com/hbeauty.bucket/output_1680444275_98472c21-9807-4635-a058-f4c6f05f3251.jpg"
+                          th:src="${result.result_img}"
                           style="max-width: 150px; margin: 0 20 20 20"
                         />
                       </div>
@@ -377,8 +380,7 @@
                               <div class="img">
                                 <a
                                   ><img
-                                    src="https://image.thehyundai.com/static/0/3/5/56/A1/60A1565309_0_600.jpg"
-                                    alt="[메이크업포에버] [스벅1잔] 루즈 아티스트 포에버 매트" /><span
+                                   th:src="${lipresult.iloc} + '_600.jpg'" th:alt="${lipresult.pname}" /><span
                                     class="bg"
                                   ></span
                                 ></a>
@@ -388,24 +390,21 @@
                                   type="hidden"
                                   name="lip_pcode"
                                   class="lip_pcode"
-                                  value="A1565309"
+                                  th:value="${lipresult.pcode}"
                                 />
                                 <input
                                   type="hidden"
                                   name="lip_opt"
                                   class="lip_opt"
-                                  value="440 브릭 레드"
+                                  th:value="${lipresult.optname}"
                                 />
                                 <div class="price-info single">
-                                  <span>36,000</span>
+                                  <span th:text="${#numbers.formatInteger(lipresult.pprice, 3, 'COMMA')}"></span>
                                 </div>
                                 <div>
-                                  <a
-                                    >[메이크업포에버] [스벅1잔] 루즈 아티스트
-                                    포에버 매트</a
-                                  >
+                                  <a th:text="${lipresult.pname}"></a>
                                 </div>
-                                <a>440 브릭 레드</a>
+                                <a th:text="${lipresult.optname}"></a>
                               </div>
                               <div class="btn_red" style="">
                                 <p class="pickbtn">장바구니 담기</p>
@@ -417,8 +416,7 @@
                               <div class="img">
                                 <a
                                   ><img
-                                    src="https://image.thehyundai.com/static/7/2/7/54/A1/40A1547270_0_600.jpg"
-                                    alt="바비 브라운 크러쉬드 크리미 컬러 포 립 앤 치크" /><span
+                                    th:src="${blushresult.iloc} + '_600.jpg'" th:alt="${blushresult.pname}"/><span
                                     class="bg"
                                   ></span
                                 ></a>
@@ -428,24 +426,22 @@
                                   type="hidden"
                                   name="blush_pcode"
                                   class="blush_pcode"
-                                  value="A1547270"
+                                  th:value="${blushresult.pcode}"
                                 />
                                 <input
                                   type="hidden"
                                   name="blush_opt"
                                   class="blush_opt"
-                                  value="크리미코랄"
+                                  th:value="${blushresult.optname}"
                                 />
                                 <div class="price-info single">
-                                  <span>47,000</span>
+                                  <span th:text="${#numbers.formatInteger(blushresult.pprice, 3, 'COMMA')}"></span>
                                 </div>
                                 <div>
-                                  <a
-                                    >바비 브라운 크러쉬드 크리미 컬러 포 립 앤
-                                    치크</a
+                                  <a th:text="${blushresult.pname}"></a
                                   >
                                 </div>
-                                <a>크리미코랄</a>
+                                <a th:text="${blushresult.optname}"></a>
                               </div>
                               <div class="btn_red" style="">
                                 <p class="pickbtn">장바구니 담기</p>
@@ -456,9 +452,7 @@
                             <div class="clonepart">
                               <div class="img">
                                 <a
-                                  ><img
-                                    src="http://image.thehyundai.com/static/3/5/1/08/A1/40A1081536_1_600.jpg"
-                                    alt="바비 브라운 NEW 인텐시브 세럼 파운데이션 SPF40 PA++++" /><span
+                                  ><img th:src="${faceresult.iloc} + '_600.jpg'" th:alt="${faceresult.pname}"/><span
                                     class="bg"
                                   ></span
                                 ></a>
@@ -468,24 +462,22 @@
                                   type="hidden"
                                   name="face_pcode"
                                   class="face_pcode"
-                                  value="A1081536"
+                                  th:value="${faceresult.pcode}"
                                 />
                                 <input
                                   type="hidden"
                                   name="face_opt"
                                   class="face_opt"
-                                  value="베이지"
+                                  th:value="${faceresult.optname}"
                                 />
                                 <div class="price-info single">
-                                  <span>99,000</span>
+                                  <span th:text="${#numbers.formatInteger(faceresult.pprice, 3, 'COMMA')}"></span>
                                 </div>
                                 <div>
-                                  <a
-                                    >바비 브라운 NEW 인텐시브 세럼 파운데이션
-                                    SPF40 PA++++</a
+                                  <a th:text="${faceresult.pname}"></a
                                   >
                                 </div>
-                                <a>베이지</a>
+                                <a th:text="${faceresult.optname}"></a>
                               </div>
                               <div class="btn_red" style="">
                                 <p class="pickbtn">장바구니 담기</p>
@@ -528,6 +520,125 @@
         line-height: 30px;
         margin: 20px 0;
       }
+      .price-info.single {
+  margin-bottom: 10px;
+}
+.prod {
+  width: 100%;
+  margin: 10px;
+}
+
+.prod-unit .img img {
+  display: block;
+  width: 256px;
+  height: 256px;
+}
+.prod-unit .img .bg {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  background: url(https://image.thehyundai.com/hdmall/images/co/bg_produnit_hover.png);
+}
+.prod-unit .info {
+  padding-top: 20px;
+  width: 256px;
+  margin-left: 20px;
+}
+
+.product-list {
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  overflow-x: scroll;
+  grid-auto-flow: column;
+  height: 100%;
+}
+
+ul {
+  list-style: none;
+}
+.product-list-wrap {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  overflow: auto;
+}
+.btn_green {
+  color: white;
+  background: #45675b;
+  height: 50px;
+}
+.btn_gray {
+  color: white;
+  background: slategray;
+  height: 50px;
+}
+p.pickbtn {
+  margin-top: 10px;
+  font-weight: 100;
+  font-size: 16;
+  cursor: pointer;
+  height: 50px;
+  display: inline-grid;
+  vertical-align: middle;
+}
+.lip_pick {
+  width: 255px;
+  margin: 20 auto;
+  text-align: center;
+}
+.blush_pick {
+  width: 150px;
+  margin: 20 auto;
+  text-align: center;
+}
+.foundation_pick {
+  width: 150px;
+  margin: 20 auto;
+  text-align: center;
+}
+.select-list {
+  grid-template-columns: repeat(3, 1fr);
+  display: grid;
+  place-items: center;
+  width: 70%;
+  height: 440px;
+  margin: 0 auto;
+}
+.type_pick {
+  width: 255px;
+  text-align: center;
+  margin: 0 20px;
+}
+.select-list1 {
+  grid-template-columns: repeat(3, 1fr);
+  display: grid;
+  place-items: center;
+  width: 70%;
+  margin: 0 auto;
+}
+
+.clonepart .img img {
+  display: block;
+  width: 256px;
+  height: 256px;
+}
+
+.empty {
+  width: 250;
+  height: 330;
+  border-radius: 10%;
+  border-style: dashed;
+  border-color: darkgray;
+  margin: 0 10px;
+}
+      
     </style>
   </body>
 </html>

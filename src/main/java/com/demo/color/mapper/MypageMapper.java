@@ -37,11 +37,11 @@ public interface MypageMapper {
 	// 결과 -> 결과값 립
 	public LipVO getLipResult(String optname);
 	
-	// 결과 -> 결과값 립
+	// 결과 -> 결과값 블러쉬
 	public BlushVO getBlushResult(String optname);
 	
-	// 결과 -> 결과값 립
-	public FoundationVO getFaceResult(String optname);
+	// 결과 -> 결과값 페이스
+	public FoundationVO getFaceResult(String optname, String pcode);
 
 	// 결과 -> 상담값
 	public ReservVO getReservInfo(String rid);

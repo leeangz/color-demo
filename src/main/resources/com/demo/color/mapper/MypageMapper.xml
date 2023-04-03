@@ -23,7 +23,7 @@
 		iloc, itype
 		from product a, poption b, img c
 		where a.pcode=b.pcode and
-		a.pcode=c.pcode and dept2no=24
+		a.pcode=c.pcode and dept2no=22
 		and itype='thumb' and iloc like '%0' and
 		optname=#{optname}
 	</select>
@@ -43,8 +43,8 @@
 		iloc, itype
 		from product a, poption b, img c
 		where a.pcode=b.pcode and
-		a.pcode=c.pcode and dept2no=24
-		and itype='thumb' and iloc like '%0' and
+		a.pcode=c.pcode and dept2no=21
+		and itype='thumb' and iloc like '%0' and a.pcode=#{pcode} and
 		optname=#{optname}
 	</select>
 	<select id="getReservInfo"
